@@ -166,5 +166,11 @@
     "name": "RNSprucekitWalletSdkSpec",
     "type": "modules",
     "jsSrcsDir": "src"
+  },
+  "dependencies": {
+    "@react-navigation/material-bottom-tabs": "^6.2.19",
+    "@react-navigation/native": "^6.1.9",
+    "react-native-paper": "^5.12.3",
+    "react-native-vector-icons": "^10.0.3"
   }
 }

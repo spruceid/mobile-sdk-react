@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
+import { Credential } from './credential';
 
 const LINKING_ERROR =
   `The package 'react-native-sprucekit-wallet-sdk' doesn't seem to be linked. Make sure: \n\n` +
@@ -24,6 +25,12 @@ const SprucekitWalletSdk = SprucekitWalletSdkModule
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
+
+function multiply(a: number, b: number): Promise<number> {
   return SprucekitWalletSdk.multiply(a, b);
+}
+
+export {
+  type Credential,
+  multiply,
 }

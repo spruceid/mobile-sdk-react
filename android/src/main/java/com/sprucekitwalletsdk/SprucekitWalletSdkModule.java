@@ -29,6 +29,28 @@ public class SprucekitWalletSdkModule extends SprucekitWalletSdkSpec {
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
-    promise.resolve(nativeMultiply(a, b));
+    ComputationThread thread = new ComputationThread(a, b, promise);
+    thread.run();
+  }
+
+  private class ComputationThread extends Thread {
+    double a;
+    double b;
+    Promise promise;
+
+    ComputationThread(double a, double b, Promise promise) {
+      this.a = a;
+      this.b = b;
+      this.promise = promise;
+    }
+
+    @Override
+    public void run() {
+      try {
+        Thread.sleep(2000);
+      } catch(InterruptedException e) { }
+
+      promise.resolve(nativeMultiply(a, b));
+    }
   }
 }

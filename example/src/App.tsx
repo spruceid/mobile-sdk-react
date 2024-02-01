@@ -1,31 +1,20 @@
 import * as React from 'react';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncModuleView from './AsyncModuleView';
+import CredentialsView from './CredentialsView';
+import ShareView from './ShareView';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-sprucekit-wallet-sdk';
+const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Test Async Module" component={AsyncModuleView} />
+        <Tab.Screen name="Credentials" component={CredentialsView} />
+        <Tab.Screen name="Share" component={ShareView} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});

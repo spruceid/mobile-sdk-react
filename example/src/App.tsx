@@ -1,31 +1,26 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-sprucekit-wallet-sdk';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import DebugTab from './DebugTab';
+import CredentialsTab from './CredentialsTab';
+import ShareTab from './ShareTab';
+
+const Tab = createMaterialBottomTabNavigator();
+
+const showDebugTab = false;
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Credentials" component={CredentialsTab} />
+          <Tab.Screen name="Share" component={ShareTab} />
+          {showDebugTab && (<Tab.Screen name="Debug" component={DebugTab} />)}
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});

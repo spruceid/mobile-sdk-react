@@ -1,4 +1,4 @@
-package com.sprucekitwalletsdkexample
+package com.walletsdkexample
 
 import android.app.Application
 import com.facebook.react.PackageList

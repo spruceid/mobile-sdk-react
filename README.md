@@ -1,17 +1,17 @@
-# react-native-sprucekit-wallet-sdk
+# react-native-wallet-sdk
 
-Sprucekit Wallet SDK
+Spruce Wallet SDK for React Native
 
 ## Installation
 
 ```sh
-npm install react-native-sprucekit-wallet-sdk
+npm install react-native-wallet-sdk
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-sprucekit-wallet-sdk';
+import { multiply } from 'react-native-wallet-sdk';
 
 // ...
 

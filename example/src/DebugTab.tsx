@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Text, View } from 'react-native';
-import { multiply, helloRust } from 'react-native-wallet-sdk';
+import { multiply, helloRust } from '@spruceid/react-native-wallet-sdk';
 import styles from './Styles';
 
 export default function DebugTab() {

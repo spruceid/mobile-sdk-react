@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Text, View } from 'react-native';
 import styles from './Styles';
-import { allCredentials } from 'react-native-wallet-sdk';
+import { allCredentials } from '@spruceid/react-native-wallet-sdk';
 
 export default function CredentialsTab() {
 	const [credentials, setCredentials] = React.useState<string[]>(["Not yet read"]);

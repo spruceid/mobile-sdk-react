@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Button, ScrollView, Switch, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import styles from './Styles';
-import { BleSessionManager, type ItemsRequestDocType, type PermittedItemDocType, type PermittedItemNamespace } from 'react-native-wallet-sdk';
+import { BleSessionManager, type BleUpdateState, type ItemsRequestDocType, type PermittedItemDocType, type PermittedItemNamespace } from 'react-native-wallet-sdk';
 
 interface FlatItemsRequest {
     docType: string,
@@ -67,10 +67,10 @@ export default function ShareTab() {
 
     React.useEffect(() => {
         const callback = {
-            update: function(state: any) {
+            update: function(state: BleUpdateState) {
                 console.log("got state", state);
                 switch(state.kind) {
-                    case 'sessionEngagingQrCode': {
+                    case 'qrCode': {
                         setState({
                             kind: "qrCode",
                             qrCodeUri: state.qrCodeUri,

@@ -32,14 +32,30 @@ export function helloRust(): Promise<string> {
   return WalletSdk.helloRust();
 }
 
+/**
+ * Register an MDoc with the wallet-sdk
+ * @param cborBase64 Base64 of the CBOR of the MDoc to register
+ * @returns UUID object ID of the MDoc created
+ */
 export function createMdocFromCbor(cborBase64: string): Promise<String> {
   return WalletSdk.createMdocFromCbor(cborBase64);
 }
 
+/**
+ * Register a private key with the wallet-sdk
+ * @param algo Accepted values: "p256"
+ * @param pem PEM encoded private key
+ * @returns UUID object ID of the private key created
+ */
 export function createSoftPrivateKeyFromPem(algo: string, pem: string): Promise<String> {
   return WalletSdk.createSoftPrivateKeyFromPem(algo, pem);
 }
 
+/**
+ * Retrieve a list of all credentials (such as MDocs) registered with the 
+ * wallet-sdk
+ * @returns Array of UUID object IDs of credentials
+ */
 export function allCredentials(): Promise<string[]> {
   return WalletSdk.allCredentials();
 }
@@ -58,8 +74,67 @@ eventEmitter.addListener('onDebugLog', (event: any) => {
   console.log(event);
 });
 
-interface BleStateCallback {
-  update(state: any):void;
+/**
+ * Event emitted when reader has begun ISO/IEC DIS 18013-5 mDL Peripheral
+ * Server Mode with "qrCode" device engagement and the app is required to
+ * present a URL QR code with the given qrCodeUri to be scanned by the reader
+ */
+export interface QrCodeState {
+  kind: "qrCode",
+  /**
+   * URI to be displayed as QR code
+   */
+  qrCodeUri: string,
+}
+
+/**
+ * Event emitted on any error during BLE presentment
+ */
+export interface ErrorState {
+  kind: "error",
+  /**
+   * Debug error message
+   */
+  error: string,
+}
+
+/**
+ * Event emitted when the list of field types requested by the reader have
+ * been received and need to be validated by the app.  This state is cleared
+ * with a subsequent call to BleManager.submitNamespaces()
+ */
+export interface SelectNamespaceState {
+  kind: "selectNamespace"
+  /**
+   * The list of field types requested by the reader
+   */
+  itemsRequest: ItemsRequestDocType[],
+}
+
+/**
+ * Event emitted when use is to be updated on progression of internal BLE state
+ * such as when successfully connected to a reader or when progress has been 
+ * made sending bulk data to the reader
+ */
+export interface ProgressState {
+  kind: "progress",
+  /**
+   * Message encapsulating how state has progressed
+   */
+  progressMsg: string,
+}
+
+/**
+ * Event emitted upon successful completion of BLE presentment
+ */
+export interface SuccessState {
+  kind: "success",
+}
+
+export type BleUpdateState = QrCodeState | ErrorState | SelectNamespaceState | ProgressState | SuccessState;
+
+export interface BleStateCallback {
+  update(state: BleUpdateState):void;
 }
 
 export const BleSessionManager = (function() {
@@ -76,7 +151,7 @@ export const BleSessionManager = (function() {
     }
   });
 
-  const sendStateUpdate = (state: any) => {
+  const sendStateUpdate = (state: BleUpdateState) => {
     callbacks.map((callback) => {
       callback.update(state);
     })
@@ -85,7 +160,7 @@ export const BleSessionManager = (function() {
   eventEmitter.addListener('onBleSessionEngagingQrCode', (event: any) => {
     console.log("onBleSessionEngagingQrCode", event);
     sendStateUpdate({
-      kind: "sessionEngagingQrCode",
+      kind: "qrCode",
       qrCodeUri: event.qrCodeUri,
     });
   });
@@ -118,15 +193,23 @@ export const BleSessionManager = (function() {
     console.log('onBleSessionSuccess', event);
     sendStateUpdate({
       kind: "success",
-      itemsRequest: event.itemsRequest,
     });
   });
 
   return {
+    /**
+     * Register a callback with the BLE session manager
+     * @param newCallback 
+     */
     registerCallback: function(newCallback: BleStateCallback) {
       console.log("registerCallbacks");
       callbacks.push(newCallback);
     },
+    /**
+     * Deregister a callback with the BLE session manager.  Note: all copies of
+     * this callback will be removed if it had been registerd multiple times
+     * @param oldCallback 
+     */
     unRegisterCallback: function(oldCallback: BleStateCallback) {
       console.log("unRegisterCallbacks");
       callbacks = callbacks.filter((value) => {
@@ -136,6 +219,12 @@ export const BleSessionManager = (function() {
         return false;
       });
     },
+    /**
+     * Begin ISO/IEC DIS 18013-5 mDL Peripheral Server Mode
+     * @param mdocUuid UUID object ID of the mdoc to present
+     * @param privateKey UUID object ID of the private key matched with the mdoc
+     * @param deviceEngagement Accepted values: "qrCode"
+     */
     startPresentMdoc: function(mdocUuid: string, privateKey: string, deviceEngagement: string) {
       if(internalUuid === undefined) {
         toPresent = {
@@ -146,10 +235,19 @@ export const BleSessionManager = (function() {
       }
       WalletSdk.bleSessionStartPresentMdoc(internalUuid, mdocUuid, privateKey, deviceEngagement);
     },
+    /**
+     * Submit which fields are permitted by the reader to send after receiving
+     * a SelectNamespaceEvent
+     * @param permitted Fields that the app permits to send to the reader
+     */
     submitNamespaces: function(permitted: PermittedItemDocType[]) {
       console.log("permitted", permitted);
       WalletSdk.bleSessionSubmitNamespaces(internalUuid, permitted);
     },
+
+    /**
+     * Cancel in progress connections and shutdown BLE stack
+     */
     cancel: function() {
       console.log("cancelling");
       WalletSdk.bleSessionCancel(internalUuid);

@@ -28,10 +28,6 @@ end
 target 'WalletSdkExample' do
   config = use_native_modules!
 
-  pod 'WalletSdk', :path => '../../../wallet-sdk-swift'
-  pod 'WalletSdkRs', :path => '../../../wallet-sdk-rs'
-  pod 'WalletSdkRsRustFramework', :path => '../../../wallet-sdk-rs'
-
   use_react_native!(
     :path => config[:reactNativePath],
     # Enables Flipper.

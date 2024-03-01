@@ -44,7 +44,7 @@
     "url": "git+https://github.com/spurceid/wallet-sdk-react"
   },
   "author": "Spruce Systems, Inc. <hello@spruceid.com> (https://spruceid.com)",
-  "license": "MIT",
+  "license": "MIT OR Apache-2.0",
   "bugs": {
     "url": "https://github.com/spurceid/wallet-sdk-react/issues"
   },

@@ -41,14 +41,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spurceid/wallet-sdk-react.git"
+    "url": "git+https://github.com/spurceid/wallet-sdk-react"
   },
   "author": "Spruce Systems, Inc. <hello@spruceid.com> (https://spruceid.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/spurceid/wallet-sdk-react.git/issues"
+    "url": "https://github.com/spurceid/wallet-sdk-react/issues"
   },
-  "homepage": "https://github.com/spurceid/wallet-sdk-react.git#readme",
+  "homepage": "https://github.com/spurceid/wallet-sdk-react",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

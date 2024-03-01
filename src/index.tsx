@@ -135,14 +135,26 @@ export interface BleStateCallback {
 export const BleSessionManager = (function () {
   let internalUuid: string | undefined;
 
-  let toPresent: any;
+  interface DeferredPresentArgs {
+    mdocUuid: string;
+    privateKey: string;
+    deviceEngagement: string;
+  }
+
+  let toPresent: DeferredPresentArgs | undefined;
   let callbacks: BleStateCallback[] = [];
 
   WalletSdk.createBleManager().then((uuid: string) => {
     internalUuid = uuid;
 
     if (toPresent !== undefined) {
-      console.log('actually start present', toPresent);
+      WalletSdk.startPresentMdoc(
+        internalUuid,
+        toPresent.mdocUuid,
+        toPresent.privateKey,
+        toPresent.deviceEngagement
+      );
+      toPresent = undefined;
     }
   });
 
@@ -229,6 +241,7 @@ export const BleSessionManager = (function () {
         toPresent = {
           mdocUuid: mdocUuid,
           privateKey: privateKey,
+          deviceEngagement: deviceEngagement,
         };
         return;
       }

@@ -16,21 +16,13 @@ const WalletSdkModule = isTurboModuleEnabled
 const WalletSdk = WalletSdkModule
   ? WalletSdkModule
   : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return WalletSdk.multiply(a, b);
-}
-
-export function helloRust(): Promise<string> {
-  return WalletSdk.helloRust();
-}
+    {},
+    {
+      get() {
+        throw new Error(LINKING_ERROR);
+      },
+    }
+  );
 
 /**
  * Register an MDoc with the wallet-sdk
@@ -52,7 +44,7 @@ export function createSoftPrivateKeyFromPem(algo: string, pem: string): Promise<
 }
 
 /**
- * Retrieve a list of all credentials (such as MDocs) registered with the 
+ * Retrieve a list of all credentials (such as MDocs) registered with the
  * wallet-sdk
  * @returns Array of UUID object IDs of credentials
  */
@@ -62,11 +54,6 @@ export function allCredentials(): Promise<string[]> {
 
 const eventEmitter = new NativeEventEmitter(WalletSdk);
 
-const onRustHelloed = (event: any) => {
-  console.log(event);
-}
-
-eventEmitter.addListener('onRustHelloed', onRustHelloed);
 eventEmitter.addListener('onCredentialAdded', (event: any) => {
   console.log(event);
 });
@@ -113,7 +100,7 @@ export interface SelectNamespaceState {
 
 /**
  * Event emitted when use is to be updated on progression of internal BLE state
- * such as when successfully connected to a reader or when progress has been 
+ * such as when successfully connected to a reader or when progress has been
  * made sending bulk data to the reader
  */
 export interface ProgressState {
@@ -134,7 +121,7 @@ export interface SuccessState {
 export type BleUpdateState = QrCodeState | ErrorState | SelectNamespaceState | ProgressState | SuccessState;
 
 export interface BleStateCallback {
-  update(state: BleUpdateState):void;
+  update(state: BleUpdateState): void;
 }
 
 export const BleSessionManager = (function() {
@@ -146,7 +133,7 @@ export const BleSessionManager = (function() {
   WalletSdk.createBleManager().then((uuid: string) => {
     internalUuid = uuid;
 
-    if(toPresent !== undefined) {
+    if (toPresent !== undefined) {
       console.log("actually start present", toPresent);
     }
   });
@@ -199,7 +186,7 @@ export const BleSessionManager = (function() {
   return {
     /**
      * Register a callback with the BLE session manager
-     * @param newCallback 
+     * @param newCallback
      */
     registerCallback: function(newCallback: BleStateCallback) {
       console.log("registerCallbacks");
@@ -208,12 +195,12 @@ export const BleSessionManager = (function() {
     /**
      * Deregister a callback with the BLE session manager.  Note: all copies of
      * this callback will be removed if it had been registerd multiple times
-     * @param oldCallback 
+     * @param oldCallback
      */
     unRegisterCallback: function(oldCallback: BleStateCallback) {
       console.log("unRegisterCallbacks");
       callbacks = callbacks.filter((value) => {
-        if(value === oldCallback) {
+        if (value === oldCallback) {
           return true;
         }
         return false;
@@ -226,7 +213,7 @@ export const BleSessionManager = (function() {
      * @param deviceEngagement Accepted values: "qrCode"
      */
     startPresentMdoc: function(mdocUuid: string, privateKey: string, deviceEngagement: string) {
-      if(internalUuid === undefined) {
+      if (internalUuid === undefined) {
         toPresent = {
           mdocUuid: mdocUuid,
           privateKey: privateKey,

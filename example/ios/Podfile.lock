@@ -950,6 +950,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+    - SpruceIDWalletSdk (~> 0.0.4)
   - React-nativeconfig (0.73.4)
   - React-NativeModulesApple (0.73.4):
     - glog
@@ -1120,6 +1121,13 @@ PODS:
   - RNSVG (14.1.0):
     - React-Core
   - SocketRocket (0.6.1)
+  - SpruceIDWalletSdk (0.0.4):
+    - SpruceIDWalletSdkRs (~> 0.0.18)
+    - SwiftAlgorithms (~> 1.0.0)
+  - SpruceIDWalletSdkRs (0.0.18):
+    - SpruceIDWalletSdkRsRustFramework (= 0.0.18)
+  - SpruceIDWalletSdkRsRustFramework (0.0.18)
+  - SwiftAlgorithms (1.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -1215,6 +1223,10 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - SocketRocket
+    - SpruceIDWalletSdk
+    - SpruceIDWalletSdkRs
+    - SpruceIDWalletSdkRsRustFramework
+    - SwiftAlgorithms
 
 EXTERNAL SOURCES:
   boost:
@@ -1362,7 +1374,7 @@ SPEC CHECKSUMS:
   React-logger: 0a57b68dd2aec7ff738195f081f0520724b35dab
   React-Mapbuffer: 63913773ed7f96b814a2521e13e6d010282096ad
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
-  react-native-wallet-sdk: d37206ee8be6c7f04eccfdcb2e062b0d85175b89
+  react-native-wallet-sdk: 505bfd7db82f17394528942e06f12ffdd07b3498
   React-nativeconfig: d7af5bae6da70fa15ce44f045621cf99ed24087c
   React-NativeModulesApple: 0123905d5699853ac68519607555a9a4f5c7b3ac
   React-perflogger: 8a1e1af5733004bdd91258dcefbde21e0d1faccd
@@ -1385,8 +1397,12 @@ SPEC CHECKSUMS:
   ReactCommon: 840a955d37b7f3358554d819446bffcf624b2522
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Yoga: 64cd2a583ead952b0315d5135bf39e053ae9be70
+  SpruceIDWalletSdk: e6bec7f929f94fbc341bcd0814e830ee4b504a22
+  SpruceIDWalletSdkRs: 1060c185e1a291cded836a29071ae5d0d974a0c8
+  SpruceIDWalletSdkRsRustFramework: 9b7770dc238dedb2c95414c8294c3516bf7a5843
+  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
+  Yoga: 1b901a6d6eeba4e8a2e8f308f708691cdb5db312
 
-PODFILE CHECKSUM: ef956a4c7a3800edfeeb6850df0ae84056d8b19a
+PODFILE CHECKSUM: e24651a617f6964c34031254129583e664d01b1f
 
 COCOAPODS: 1.14.3

@@ -8,7 +8,12 @@ export interface Spec extends TurboModule {
 
   createBleManager(): Promise<string>;
 
-  bleSessionStartPresentMdoc(bleUuid: string, mdocUuid: string, privateKeyUuid: string, deviceEngagement: string): Promise<void>;
+  bleSessionStartPresentMdoc(
+    bleUuid: string,
+    mdocUuid: string,
+    privateKeyUuid: string,
+    deviceEngagement: string
+  ): Promise<void>;
 
   bleSessionSubmitNamespaces(bleUuid: string, permitted: any): Promise<void>;
 

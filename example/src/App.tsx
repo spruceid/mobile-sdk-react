@@ -7,6 +7,11 @@ import DebugTab from './DebugTab';
 import CredentialsTab from './CredentialsTab';
 import ShareTab from './ShareTab';
 
+declare global {
+  var mdocUuid: string;
+  var privateKeyUuid: string;
+}
+
 const Tab = createMaterialBottomTabNavigator();
 
 const showDebugTab = false;
@@ -18,7 +23,7 @@ export default function App() {
         <Tab.Navigator>
           <Tab.Screen name="Credentials" component={CredentialsTab} />
           <Tab.Screen name="Share" component={ShareTab} />
-          {showDebugTab && (<Tab.Screen name="Debug" component={DebugTab} />)}
+          {showDebugTab && <Tab.Screen name="Debug" component={DebugTab} />}
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

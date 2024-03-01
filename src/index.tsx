@@ -16,13 +16,13 @@ const WalletSdkModule = isTurboModuleEnabled
 const WalletSdk = WalletSdkModule
   ? WalletSdkModule
   : new Proxy(
-    {},
-    {
-      get() {
-        throw new Error(LINKING_ERROR);
-      },
-    }
-  );
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      }
+    );
 
 /**
  * Register an MDoc with the wallet-sdk
@@ -39,7 +39,10 @@ export function createMdocFromCbor(cborBase64: string): Promise<String> {
  * @param pem PEM encoded private key
  * @returns UUID object ID of the private key created
  */
-export function createSoftPrivateKeyFromPem(algo: string, pem: string): Promise<String> {
+export function createSoftPrivateKeyFromPem(
+  algo: string,
+  pem: string
+): Promise<String> {
   return WalletSdk.createSoftPrivateKeyFromPem(algo, pem);
 }
 
@@ -67,22 +70,22 @@ eventEmitter.addListener('onDebugLog', (event: any) => {
  * present a URL QR code with the given qrCodeUri to be scanned by the reader
  */
 export interface QrCodeState {
-  kind: "qrCode",
+  kind: 'qrCode';
   /**
    * URI to be displayed as QR code
    */
-  qrCodeUri: string,
+  qrCodeUri: string;
 }
 
 /**
  * Event emitted on any error during BLE presentment
  */
 export interface ErrorState {
-  kind: "error",
+  kind: 'error';
   /**
    * Debug error message
    */
-  error: string,
+  error: string;
 }
 
 /**
@@ -91,11 +94,11 @@ export interface ErrorState {
  * with a subsequent call to BleManager.submitNamespaces()
  */
 export interface SelectNamespaceState {
-  kind: "selectNamespace"
+  kind: 'selectNamespace';
   /**
    * The list of field types requested by the reader
    */
-  itemsRequest: ItemsRequestDocType[],
+  itemsRequest: ItemsRequestDocType[];
 }
 
 /**
@@ -104,50 +107,55 @@ export interface SelectNamespaceState {
  * made sending bulk data to the reader
  */
 export interface ProgressState {
-  kind: "progress",
+  kind: 'progress';
   /**
    * Message encapsulating how state has progressed
    */
-  progressMsg: string,
+  progressMsg: string;
 }
 
 /**
  * Event emitted upon successful completion of BLE presentment
  */
 export interface SuccessState {
-  kind: "success",
+  kind: 'success';
 }
 
-export type BleUpdateState = QrCodeState | ErrorState | SelectNamespaceState | ProgressState | SuccessState;
+export type BleUpdateState =
+  | QrCodeState
+  | ErrorState
+  | SelectNamespaceState
+  | ProgressState
+  | SuccessState;
 
 export interface BleStateCallback {
   update(state: BleUpdateState): void;
 }
 
-export const BleSessionManager = (function() {
-  let internalUuid: string | undefined = undefined;
+export const BleSessionManager = (function () {
+  let internalUuid: string | undefined;
 
-  let toPresent: any = undefined;
+  let toPresent: any;
   let callbacks: BleStateCallback[] = [];
 
   WalletSdk.createBleManager().then((uuid: string) => {
     internalUuid = uuid;
 
     if (toPresent !== undefined) {
-      console.log("actually start present", toPresent);
+      console.log('actually start present', toPresent);
     }
   });
 
   const sendStateUpdate = (state: BleUpdateState) => {
     callbacks.map((callback) => {
       callback.update(state);
-    })
+    });
   };
 
   eventEmitter.addListener('onBleSessionEngagingQrCode', (event: any) => {
-    console.log("onBleSessionEngagingQrCode", event);
+    console.log('onBleSessionEngagingQrCode', event);
     sendStateUpdate({
-      kind: "qrCode",
+      kind: 'qrCode',
       qrCodeUri: event.qrCodeUri,
     });
   });
@@ -155,7 +163,7 @@ export const BleSessionManager = (function() {
   eventEmitter.addListener('onBleSessionError', (event: any) => {
     console.log('onBleSessionError', event);
     sendStateUpdate({
-      kind: "error",
+      kind: 'error',
       error: event.error,
     });
   });
@@ -163,7 +171,7 @@ export const BleSessionManager = (function() {
   eventEmitter.addListener('onBleSessionProgress', (event: any) => {
     console.log('onBleSessionProgress', event);
     sendStateUpdate({
-      kind: "progress",
+      kind: 'progress',
       progressMsg: event.progressMsg,
     });
   });
@@ -171,7 +179,7 @@ export const BleSessionManager = (function() {
   eventEmitter.addListener('onBleSessionSelectNamespace', (event: any) => {
     console.log('onBleSessionSelectNamespace', event);
     sendStateUpdate({
-      kind: "selectNamespace",
+      kind: 'selectNamespace',
       itemsRequest: event.itemsRequest,
     });
   });
@@ -179,7 +187,7 @@ export const BleSessionManager = (function() {
   eventEmitter.addListener('onBleSessionSuccess', (event: any) => {
     console.log('onBleSessionSuccess', event);
     sendStateUpdate({
-      kind: "success",
+      kind: 'success',
     });
   });
 
@@ -188,8 +196,8 @@ export const BleSessionManager = (function() {
      * Register a callback with the BLE session manager
      * @param newCallback
      */
-    registerCallback: function(newCallback: BleStateCallback) {
-      console.log("registerCallbacks");
+    registerCallback: function (newCallback: BleStateCallback) {
+      console.log('registerCallbacks');
       callbacks.push(newCallback);
     },
     /**
@@ -197,8 +205,8 @@ export const BleSessionManager = (function() {
      * this callback will be removed if it had been registerd multiple times
      * @param oldCallback
      */
-    unRegisterCallback: function(oldCallback: BleStateCallback) {
-      console.log("unRegisterCallbacks");
+    unRegisterCallback: function (oldCallback: BleStateCallback) {
+      console.log('unRegisterCallbacks');
       callbacks = callbacks.filter((value) => {
         if (value === oldCallback) {
           return true;
@@ -212,7 +220,11 @@ export const BleSessionManager = (function() {
      * @param privateKey UUID object ID of the private key matched with the mdoc
      * @param deviceEngagement Accepted values: "qrCode"
      */
-    startPresentMdoc: function(mdocUuid: string, privateKey: string, deviceEngagement: string) {
+    startPresentMdoc: function (
+      mdocUuid: string,
+      privateKey: string,
+      deviceEngagement: string
+    ) {
       if (internalUuid === undefined) {
         toPresent = {
           mdocUuid: mdocUuid,
@@ -220,49 +232,54 @@ export const BleSessionManager = (function() {
         };
         return;
       }
-      WalletSdk.bleSessionStartPresentMdoc(internalUuid, mdocUuid, privateKey, deviceEngagement);
+      WalletSdk.bleSessionStartPresentMdoc(
+        internalUuid,
+        mdocUuid,
+        privateKey,
+        deviceEngagement
+      );
     },
     /**
      * Submit which fields are permitted by the reader to send after receiving
      * a SelectNamespaceEvent
      * @param permitted Fields that the app permits to send to the reader
      */
-    submitNamespaces: function(permitted: PermittedItemDocType[]) {
-      console.log("permitted", permitted);
+    submitNamespaces: function (permitted: PermittedItemDocType[]) {
+      console.log('permitted', permitted);
       WalletSdk.bleSessionSubmitNamespaces(internalUuid, permitted);
     },
 
     /**
      * Cancel in progress connections and shutdown BLE stack
      */
-    cancel: function() {
-      console.log("cancelling");
+    cancel: function () {
+      console.log('cancelling');
       WalletSdk.bleSessionCancel(internalUuid);
-    }
+    },
   };
 })();
 
 export interface ItemsRequestKvPair {
-  key: string,
-  value: boolean,
+  key: string;
+  value: boolean;
 }
 
 export interface ItemsRequestNamespace {
-  namespace: string,
-  kvPairs: ItemsRequestKvPair[],
+  namespace: string;
+  kvPairs: ItemsRequestKvPair[];
 }
 
 export interface ItemsRequestDocType {
-  docType: string,
-  namespaces: ItemsRequestNamespace[],
+  docType: string;
+  namespaces: ItemsRequestNamespace[];
 }
 
 export interface PermittedItemNamespace {
-  namespace: string,
-  keys: string[],
+  namespace: string;
+  keys: string[];
 }
 
 export interface PermittedItemDocType {
-  docType: string,
-  namespaces: PermittedItemNamespace[],
+  docType: string;
+  namespaces: PermittedItemNamespace[];
 }

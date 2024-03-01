@@ -3,10 +3,10 @@ pre-commit:
   commands:
     lint:
       glob: "*.{js,ts,jsx,tsx}"
-      run: npx eslint {staged_files}
+      run: yarn run eslint {staged_files}
     types:
       glob: "*.{js,ts, jsx, tsx}"
-      run: npx tsc --noEmit
+      run: yarn run tsc --noEmit
 commit-msg:
   parallel: true
   commands:

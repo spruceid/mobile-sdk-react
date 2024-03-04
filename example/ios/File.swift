@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  SprucekitWalletSdkExample
+//  WalletSdkExample
 //
 
 import Foundation

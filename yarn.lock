@@ -3409,7 +3409,6 @@ __metadata:
     eslint-config-prettier: ^9.1.0
     eslint-plugin-prettier: ^5.1.3
     jest: ^28.1.3
-    nlfurniss-typedoc-plugin-sourcefile-url: ^2.0.0
     pod-install: ^0.1.39
     prettier: ^3.2.5
     react: 18.2.0
@@ -10277,15 +10276,6 @@ __metadata:
   dependencies:
     type-fest: ^2.5.1
   checksum: 3d4ae0f3b775623ceed8e558b6f9850e897aea981a9c937d3ad4e018669c829beccb2c4b5a6af996726ebf86c5b7638368dfc01f3ac2e395d1df29309bc0c5ca
-  languageName: node
-  linkType: hard
-
-"nlfurniss-typedoc-plugin-sourcefile-url@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "nlfurniss-typedoc-plugin-sourcefile-url@npm:2.0.0"
-  peerDependencies:
-    typedoc: ">=0.22.0"
-  checksum: 99cc09f3287392d3d750e6c3c8d77587fe9a8cb31786fa9386b195a4ae1810f0338d8540a7d478643753f9e4e2b9fd0fc999704055ce7d8ff2ef20d8baf5ea1a
   languageName: node
   linkType: hard
 

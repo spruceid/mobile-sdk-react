@@ -1,31 +1,42 @@
 # react-native-wallet-sdk
 
-Spruce Wallet SDK for React Native
+SpruceID Wallet SDK for React Native
 
 ## Installation
 
 ```sh
-npm install react-native-wallet-sdk
+npm install @spruceid/react-native-wallet-sdk
+```
+
+### iOS
+
+Add to the app's info.plist
+
+```xml
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Secure transmission of mobile DL/ID data</string>
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-wallet-sdk';
+import { createMdocFromCbor } from '@spruceid/react-native-wallet-sdk';
 
 // ...
 
-const result = await multiply(3, 7);
+const mdoc = await createMdocFromCbor(mdocCborBase64);
 ```
+
+For more, see [documentation](githubjsdoc).
 
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
-## License
+## Licenses
 
-MIT
+```
+MIT OR Apache-2.0
+```
 
 ---
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

@@ -1,3 +1,5 @@
+[![ghpages](https://img.shields.io/badge/docs-passing-green)](https://walletsdkreact.sprucekit.dev/)
+
 # react-native-wallet-sdk
 
 SpruceID Wallet SDK for React Native
@@ -27,7 +29,7 @@ import { createMdocFromCbor } from '@spruceid/react-native-wallet-sdk';
 const mdoc = await createMdocFromCbor(mdocCborBase64);
 ```
 
-For more, see [documentation](githubjsdoc).
+For more, see [documentation](https://walletsdkreact.sprucekit.dev/).
 
 ## Contributing
 

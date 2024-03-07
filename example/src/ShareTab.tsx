@@ -1,6 +1,14 @@
 import * as React from 'react';
 
-import { Button, ScrollView, Switch, Text, View } from 'react-native';
+import {
+  Button,
+  DeviceEventEmitter,
+  PermissionsAndroid,
+  ScrollView,
+  Switch,
+  Text,
+  View,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import styles from './Styles';
 import {
@@ -76,6 +84,19 @@ type State =
   | SuccessState
   | ProgressState;
 
+const requestPermissions = async () => {
+  try {
+    await PermissionsAndroid.requestMultiple([
+      'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.BLUETOOTH_CONNECT',
+      'android.permission.BLUETOOTH_SCAN',
+      'android.permission.BLUETOOTH_ADVERTISE',
+    ]);
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
 export default function ShareTab() {
   const [state, setState] = React.useState<State>({ kind: 'idle' });
 
@@ -121,23 +142,34 @@ export default function ShareTab() {
       },
     };
 
+    const listener = DeviceEventEmitter.addListener(
+      'nativeDeviceCallback',
+      (e) => {
+        const event = JSON.parse(e);
+        setState({
+          kind: 'qrCode',
+          qrCodeUri: event.qrCodeUri,
+        });
+      }
+    );
     BleSessionManager.registerCallback(callback);
 
     return () => {
       BleSessionManager.unRegisterCallback(callback);
+      listener.remove();
     };
   });
 
-  const presentButtonOnPress = () => {
+  const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
-
-    BleSessionManager.startPresentMdoc(
+    await requestPermissions();
+    await BleSessionManager.startPresentMdoc(
       globalThis.mdocUuid,
       globalThis.privateKeyUuid,
       'qrCode'
     );
 
-    console.log('started presentation');
+    console.log('ended presentation');
   };
 
   const shareButtonOnPress = () => {
@@ -272,7 +304,9 @@ export default function ShareTab() {
     <ScrollView>
       <View style={styles.container}>
         <Button title="Present with QR Code" onPress={presentButtonOnPress} />
+        <View style={{ marginVertical: 30 }} />
         {element != null && element}
+        <View style={{ marginVertical: 30 }} />
         {cancelButton != null && cancelButton}
       </View>
     </ScrollView>

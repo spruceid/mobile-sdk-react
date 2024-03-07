@@ -232,7 +232,7 @@ export const BleSessionManager = (function () {
      * @param privateKey UUID object ID of the private key matched with the mdoc
      * @param deviceEngagement Accepted values: "qrCode"
      */
-    startPresentMdoc: function (
+    startPresentMdoc: async function (
       mdocUuid: string,
       privateKey: string,
       deviceEngagement: string
@@ -245,7 +245,7 @@ export const BleSessionManager = (function () {
         };
         return;
       }
-      WalletSdk.bleSessionStartPresentMdoc(
+      await WalletSdk.bleSessionStartPresentMdoc(
         internalUuid,
         mdocUuid,
         privateKey,

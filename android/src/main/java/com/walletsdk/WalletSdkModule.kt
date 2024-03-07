@@ -67,8 +67,11 @@ class BleStateCallback(private val context: ReactApplicationContext): BLESession
           emitEvent = "onBleSessionProgress"
           eventValue.putString("progressMsg", state[eventName].toString())
         }
+        "success" -> {
+          emitEvent = "onBleSessionSuccess"
+        }
     }
-    Log.i("WalletSdk", "$emitEvent: $eventValue")
+    Log.i("WalletSdkModule.BleStateCallback.update", "event: { $emitEvent: $eventValue }")
     context.emitDeviceEvent(emitEvent, eventValue)
   }
 }
@@ -80,14 +83,6 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
 
 
   private val viewModel =  CredentialsViewModel()
-
-
-//  val session by viewModel.session
-//  val currentState by viewModel.currState.collect {state ->
-//  }
-//  val credentials by viewModel.credentials.collectAsState()
-//  val requestData by viewModel.requestData.collectAsState()
-//  val allowedNamespaces by viewModel.allowedNamespaces.collectAsState()
 
   override fun getName(): String {
     return NAME

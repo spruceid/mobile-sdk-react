@@ -109,7 +109,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-android:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.spruceid.wallet.sdk:walletsdk:0.0.3'
+  implementation 'com.spruceid.wallet.sdk:walletsdk:0.0.4'
 }
 
 if (isNewArchitectureEnabled()) {

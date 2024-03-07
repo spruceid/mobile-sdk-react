@@ -65,7 +65,15 @@ class BleStateCallback(private val context: ReactApplicationContext): BLESession
         }
         "progress" -> {
           emitEvent = "onBleSessionProgress"
-          eventValue.putString("progressMsg", state[eventName].toString())
+          val map = WritableNativeMap()
+          if((state[eventName] as Map<*, *>)["curr"] == (state[eventName] as Map<*, *>)["max"]) {
+            emitEvent = "onBleSessionSuccess"
+          } else {
+//            Uncomment for better progress management
+//            map.putInt("currentProgress", ((state[eventName] as Map<*, *>)["curr"] as Int))
+//            map.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
+            eventValue.putString("progressMsg", "${(state[eventName] as Map<*, *>)["curr"]}/${(state[eventName] as Map<*, *>)["max"]}")
+          }
         }
         "success" -> {
           emitEvent = "onBleSessionSuccess"

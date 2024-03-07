@@ -102,7 +102,7 @@ export default function ShareTab() {
 
   React.useEffect(() => {
     const callback = {
-      update: function (bleState: BleUpdateState) {
+      update: function(bleState: BleUpdateState) {
         console.log('got state', bleState);
         switch (bleState.kind) {
           case 'qrCode':
@@ -142,34 +142,23 @@ export default function ShareTab() {
       },
     };
 
-    const listener = DeviceEventEmitter.addListener(
-      'nativeDeviceCallback',
-      (e) => {
-        const event = JSON.parse(e);
-        setState({
-          kind: 'qrCode',
-          qrCodeUri: event.qrCodeUri,
-        });
-      }
-    );
     BleSessionManager.registerCallback(callback);
 
     return () => {
       BleSessionManager.unRegisterCallback(callback);
-      listener.remove();
     };
   });
 
   const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
     await requestPermissions();
-    await BleSessionManager.startPresentMdoc(
+    BleSessionManager.startPresentMdoc(
       globalThis.mdocUuid,
       globalThis.privateKeyUuid,
       'qrCode'
     );
 
-    console.log('ended presentation');
+    console.log('started presentation');
   };
 
   const shareButtonOnPress = () => {

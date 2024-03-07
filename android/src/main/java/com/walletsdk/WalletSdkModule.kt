@@ -1,20 +1,22 @@
 package com.walletsdk
 
 import android.util.Log
-import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.ReadableNativeArray
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.spruceid.wallet.sdk.BLESessionManager
 import com.spruceid.wallet.sdk.BLESessionStateDelegate
-import com.spruceid.wallet.sdk.BleCentralCallback
 import com.spruceid.wallet.sdk.CredentialsViewModel
 import com.spruceid.wallet.sdk.MDoc
 import com.spruceid.wallet.sdk.getBluetoothManager
+import com.spruceid.wallet.sdk.rs.ItemsRequest
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.Certificate
@@ -23,16 +25,50 @@ import java.security.spec.PKCS8EncodedKeySpec
 
 class BleStateCallback(private val context: ReactApplicationContext): BLESessionStateDelegate() {
   override fun update(state: Map<String, Any>) {
+    Log.i("WalletSdk", state.toString())
     val eventName = state.keys.first()
     var emitEvent = ""
-    var eventValue: Any = ""
-    if(eventName == "engagingQRCode") {
-      emitEvent = "onBleSessionEngagingQrCode"
-      val event: WritableMap = WritableNativeMap()
-      event.putString("qrCodeUri", state[eventName].toString())
-      eventValue = event
+    val eventValue: WritableMap = WritableNativeMap()
+    when (eventName) {
+        "engagingQRCode" -> {
+          emitEvent = "onBleSessionEngagingQrCode"
+          eventValue.putString("qrCodeUri", state[eventName].toString())
+        }
+        "error" -> {
+          emitEvent = "onBleSessionError"
+          eventValue.putString("error", state[eventName].toString())
+        }
+        "selectNamespaces" -> {
+          emitEvent = "onBleSessionSelectNamespace"
+          val items = WritableNativeArray()
+          for (doctype in state[eventName] as ArrayList<ItemsRequest>) {
+            val namespaces = WritableNativeArray()
+            for (namespace in doctype.namespaces as Map<String, Map<String, Boolean>>) {
+              val kvPairs = WritableNativeArray()
+              for (kv in namespace.value) {
+                val item = WritableNativeMap()
+                item.putString("key", kv.key)
+                item.putBoolean("value", kv.value)
+                kvPairs.pushMap(item)
+              }
+              val newNamespace = WritableNativeMap()
+              newNamespace.putString("namespace", namespace.key)
+              newNamespace.putArray("kvPairs", kvPairs)
+              namespaces.pushMap(newNamespace)
+            }
+            val item = WritableNativeMap()
+            item.putString("docType", doctype.docType)
+            item.putArray("namespaces", namespaces)
+            items.pushMap(item)
+          }
+          eventValue.putArray("itemsRequest", items)
+        }
+        "progress" -> {
+          emitEvent = "onBleSessionProgress"
+          eventValue.putString("progressMsg", state[eventName].toString())
+        }
     }
-    Log.d("SdkModule", "$emitEvent: $eventValue")
+    Log.i("WalletSdk", "$emitEvent: $eventValue")
     context.emitDeviceEvent(emitEvent, eventValue)
   }
 }
@@ -40,10 +76,10 @@ class BleStateCallback(private val context: ReactApplicationContext): BLESession
 class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   WalletSdkSpec(context) {
 
-    var bleSessionManager: BLESessionManager? = null
+    private var bleSessionManager: BLESessionManager? = null
 
 
-  val viewModel =  CredentialsViewModel()
+  private val viewModel =  CredentialsViewModel()
 
 
 //  val session by viewModel.session
@@ -57,15 +93,8 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
     return NAME
   }
 
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  override fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-
-  @ReactMethod
-  fun createSoftPrivateKeyFromPem(_algo: String, pem: String, promise: Promise) {
+  override fun createSoftPrivateKeyFromPem(_algo: String, pem: String, promise: Promise) {
     var keyBase64 = pem.split("-----BEGIN PRIVATE KEY-----\n").last()
     keyBase64 = keyBase64.split("-----END PRIVATE KEY-----").first()
 
@@ -109,41 +138,60 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createMdocFromCbor(cborMdoc: String, promise: Promise) {
+  override fun createMdocFromCbor(cborMdoc: String, promise: Promise) {
     val mdoc = MDoc(
       "CBor",
       android.util.Base64.decode(cborMdoc.toByteArray(), android.util.Base64.DEFAULT),
       "mdoc_key"
     )
     viewModel.storeCredental(mdoc)
-    this.reactApplicationContext.emitDeviceEvent("onCredentialAdded", "Credential 'CBor' added.")
-    promise.resolve("CBor")
+
+    val eventValue: WritableMap = WritableNativeMap()
+    eventValue.putString("id", mdoc.inner.id())
+    this.reactApplicationContext.emitDeviceEvent("onCredentialAdded",  eventValue)
+    promise.resolve(mdoc.inner.id())
   }
 
   @ReactMethod
-  fun createBleManager(promise: Promise) {
-    promise.resolve("WIP")
+  override fun createBleManager(promise: Promise) {
+    promise.resolve("dummy")
   }
 
   @ReactMethod
-  fun bleSessionStartPresentMdoc(_bleUuid: String, mdoc: String, privateKey: String, deviceEngagement: String, promise: Promise) {
+  override fun bleSessionStartPresentMdoc(_bleUuid: String, mdoc: String, privateKey: String, deviceEngagement: String, promise: Promise) {
     val context = this.reactApplicationContext
+    Log.i("WalletSdk", "ble session start present mdoc")
     this.bleSessionManager = BLESessionManager(viewModel.credentials.value.first() as MDoc, getBluetoothManager(this.reactApplicationContext)!!, BleStateCallback(context))
+    Log.i("WalletSdk", "ble manager created")
     promise.resolve(null)
   }
 
   @ReactMethod
-  fun bleSessionSubmitNamespaces(promise: Promise) {
-    promise.resolve("WIP")
+  override fun bleSessionSubmitNamespaces(_bleUuid: String, namespaces: ReadableArray, promise: Promise) {
+    val doctypes = mutableMapOf<String, Map<String, List<String>>>()
+    for (doctype in (namespaces as ReadableNativeArray).toArrayList() as ArrayList<Map<String, Any>>) {
+      val innerNamespaces = mutableMapOf<String, List<String>>()
+      for (namespace in doctype["namespaces"] as ArrayList<Map<String, Any>>) {
+        val items = mutableListOf<String>()
+        for (item in namespace["keys"] as ArrayList<String>) {
+          items.add(item)
+        }
+        innerNamespaces[namespace["namespace"]!! as String] = items
+      }
+      doctypes[doctype["docType"]!! as String] = innerNamespaces
+    }
+    this.bleSessionManager?.submitNamespaces(doctypes)
+    promise.resolve(null)
   }
 
   @ReactMethod
-  fun bleSessionCancel(promise: Promise) {
-    promise.resolve("WIP")
+  override fun bleSessionCancel(_bleUuid: String, promise: Promise) {
+    this.bleSessionManager?.cancel()
+    promise.resolve(null)
   }
 
   @ReactMethod
-  fun allCredentials(promise: Promise) {
+  override fun allCredentials(promise: Promise) {
     val array: WritableArray = WritableNativeArray()
     array.pushString("test")
     promise.resolve(array)

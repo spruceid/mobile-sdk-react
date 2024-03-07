@@ -16,9 +16,7 @@ export default function CredentialsTab() {
   return (
     <View style={styles.container}>
       {credentials.map((credUuid, i) => (
-        <Text style={{ color: 'black' }} key={i}>
-          {credUuid}
-        </Text>
+        <Text key={i}>{credUuid}</Text>
       ))}
     </View>
   );

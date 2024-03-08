@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import {
   Button,
-  DeviceEventEmitter,
   PermissionsAndroid,
   ScrollView,
   Switch,
@@ -102,7 +101,7 @@ export default function ShareTab() {
 
   React.useEffect(() => {
     const callback = {
-      update: function(bleState: BleUpdateState) {
+      update: function (bleState: BleUpdateState) {
         console.log('got state', bleState);
         switch (bleState.kind) {
           case 'qrCode':
@@ -293,9 +292,9 @@ export default function ShareTab() {
     <ScrollView>
       <View style={styles.container}>
         <Button title="Present with QR Code" onPress={presentButtonOnPress} />
-        <View style={{ marginVertical: 30 }} />
+        <View style={styles.shareElements} />
         {element != null && element}
-        <View style={{ marginVertical: 30 }} />
+        <View style={styles.shareElements} />
         {cancelButton != null && cancelButton}
       </View>
     </ScrollView>

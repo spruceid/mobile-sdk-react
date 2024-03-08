@@ -16,13 +16,13 @@ const WalletSdkModule = isTurboModuleEnabled
 const WalletSdk = WalletSdkModule
   ? WalletSdkModule
   : new Proxy(
-    {},
-    {
-      get() {
-        throw new Error(LINKING_ERROR);
-      },
-    }
-  );
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      }
+    );
 
 /**
  * Register an MDoc with the wallet-sdk
@@ -132,7 +132,7 @@ export interface BleStateCallback {
   update(state: BleUpdateState): void;
 }
 
-export const BleSessionManager = (function() {
+export const BleSessionManager = (function () {
   let internalUuid: string | undefined;
 
   interface DeferredPresentArgs {
@@ -208,7 +208,7 @@ export const BleSessionManager = (function() {
      * Register a callback with the BLE session manager
      * @param newCallback
      */
-    registerCallback: function(newCallback: BleStateCallback) {
+    registerCallback: function (newCallback: BleStateCallback) {
       console.log('registerCallbacks');
       callbacks.push(newCallback);
     },
@@ -217,7 +217,7 @@ export const BleSessionManager = (function() {
      * this callback will be removed if it had been registerd multiple times
      * @param oldCallback
      */
-    unRegisterCallback: function(oldCallback: BleStateCallback) {
+    unRegisterCallback: function (oldCallback: BleStateCallback) {
       console.log('unRegisterCallbacks');
       callbacks = callbacks.filter((value) => {
         if (value === oldCallback) {
@@ -232,7 +232,7 @@ export const BleSessionManager = (function() {
      * @param privateKey UUID object ID of the private key matched with the mdoc
      * @param deviceEngagement Accepted values: "qrCode"
      */
-    startPresentMdoc: function(
+    startPresentMdoc: function (
       mdocUuid: string,
       privateKey: string,
       deviceEngagement: string
@@ -257,7 +257,7 @@ export const BleSessionManager = (function() {
      * a SelectNamespaceEvent
      * @param permitted Fields that the app permits to send to the reader
      */
-    submitNamespaces: function(permitted: PermittedItemDocType[]) {
+    submitNamespaces: function (permitted: PermittedItemDocType[]) {
       console.log('permitted', permitted);
       WalletSdk.bleSessionSubmitNamespaces(internalUuid, permitted);
     },
@@ -265,7 +265,7 @@ export const BleSessionManager = (function() {
     /**
      * Cancel in progress connections and shutdown BLE stack
      */
-    cancel: function() {
+    cancel: function () {
       console.log('cancelling');
       WalletSdk.bleSessionCancel(internalUuid);
     },

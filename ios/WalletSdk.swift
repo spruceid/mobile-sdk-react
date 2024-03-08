@@ -78,6 +78,7 @@ class WalletSdk: RCTEventEmitter {
     let mdoc = MDoc(fromMDoc: mdocData, namespaces: [:], keyAlias: "mdoc_key")!
     self.credentials.credentials.append(mdoc)
     WalletSdk.emitter.sendEvent(withName: "onCredentialAdded", body: ["id": mdoc.id])
+    resolve(mdoc.id)
   }
 
   @objc

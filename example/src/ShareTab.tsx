@@ -1,6 +1,13 @@
 import * as React from 'react';
 
-import { Button, ScrollView, Switch, Text, View } from 'react-native';
+import {
+  Button,
+  PermissionsAndroid,
+  ScrollView,
+  Switch,
+  Text,
+  View,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import styles from './Styles';
 import {
@@ -76,6 +83,19 @@ type State =
   | SuccessState
   | ProgressState;
 
+const requestPermissions = async () => {
+  try {
+    await PermissionsAndroid.requestMultiple([
+      'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.BLUETOOTH_CONNECT',
+      'android.permission.BLUETOOTH_SCAN',
+      'android.permission.BLUETOOTH_ADVERTISE',
+    ]);
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
 export default function ShareTab() {
   const [state, setState] = React.useState<State>({ kind: 'idle' });
 
@@ -128,9 +148,9 @@ export default function ShareTab() {
     };
   });
 
-  const presentButtonOnPress = () => {
+  const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
-
+    await requestPermissions();
     BleSessionManager.startPresentMdoc(
       globalThis.mdocUuid,
       globalThis.privateKeyUuid,
@@ -272,7 +292,9 @@ export default function ShareTab() {
     <ScrollView>
       <View style={styles.container}>
         <Button title="Present with QR Code" onPress={presentButtonOnPress} />
+        <View style={styles.shareElements} />
         {element != null && element}
+        <View style={styles.shareElements} />
         {cancelButton != null && cancelButton}
       </View>
     </ScrollView>

@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     height: 60,
     marginVertical: 20,
   },
+  shareElements: {
+    marginVertical: 30,
+  },
 });
 
 export default styles;

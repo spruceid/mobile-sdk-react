@@ -1,6 +1,6 @@
 {
   "name": "@spruceid/react-native-wallet-sdk",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Spruce Wallet SDK for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -42,14 +42,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spurceid/wallet-sdk-react"
+    "url": "git+https://github.com/spruceid/wallet-sdk-react"
   },
   "author": "Spruce Systems, Inc. <hello@spruceid.com> (https://spruceid.com)",
   "license": "MIT OR Apache-2.0",
   "bugs": {
-    "url": "https://github.com/spurceid/wallet-sdk-react/issues"
+    "url": "https://github.com/spruceid/wallet-sdk-react/issues"
   },
-  "homepage": "https://github.com/spurceid/wallet-sdk-react",
+  "homepage": "https://github.com/spruceid/wallet-sdk-react",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

@@ -1,8 +1,6 @@
 [![ghpages](https://img.shields.io/badge/docs-passing-green)](https://walletsdkreact.sprucekit.dev/)
 
-# react-native-wallet-sdk
-
-SpruceID Wallet SDK for React Native
+# SpruceID Wallet SDK for React Native
 
 ## Maturity Disclaimer
 
@@ -39,7 +37,17 @@ Add to the `AndroidManifest.xml`
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
   <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+```
+
+In addition to the manifest, on newer Android versions your applications will
+also need to trigger a dialogue prompt. [You can refer to this documentation for more information](https://reactnative.dev/docs/permissionsandroid)
+```js
+await PermissionsAndroid.requestMultiple([
+  'android.permission.ACCESS_FINE_LOCATION',
+  'android.permission.BLUETOOTH_CONNECT',
+  'android.permission.BLUETOOTH_SCAN',
+  'android.permission.BLUETOOTH_ADVERTISE',
+]);
 ```
 
 ## Usage
@@ -57,11 +65,3 @@ For more, see [documentation](https://walletsdkreact.sprucekit.dev/).
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## Licenses
-
-```
-MIT OR Apache-2.0
-```
-
----

@@ -1,3 +1,4 @@
+[![NPM Version](https://img.shields.io/npm/v/%40spruceid%2Freact-native-wallet-sdk)](https://www.npmjs.com/package/@spruceid/react-native-wallet-sdk)
 [![ghpages](https://img.shields.io/badge/docs-passing-green)](https://walletsdkreact.sprucekit.dev/)
 
 # SpruceID Wallet SDK for React Native

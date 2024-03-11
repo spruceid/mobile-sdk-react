@@ -32,7 +32,7 @@ class WalletSdk: RCTEventEmitter {
   }
 
   @objc
-  func createSoftPrivateKeyFromPem(_ algo: String, pem: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+  func createSoftPrivateKeyFromSEC1PEM(_ algo: String, pem: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
     if algo != "p256" {
       reject("walletsdk", "Unknown algorithm: \(algo)", nil);
       return;
@@ -66,6 +66,17 @@ class WalletSdk: RCTEventEmitter {
     } else {
       // TODO could not find a way to increase minimum iOS version with React Native
       reject("walletsdk", "iOS version not supported", nil);
+      return;
+    }
+  }
+
+  @objc
+  func createSoftPrivateKeyFromPKCS8PEM(_ algo: String, pem: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var sec1Pem = try pkcs8ToSec1(pem: pem)
+      createSoftPrivateKeyFromSEC1PEM(algo, pem: sec1Pem, resolve: resolve, reject: reject)
+    } catch {
+      reject("walletsdk", "Error trying to load private key: \(error)", nil);
       return;
     }
   }

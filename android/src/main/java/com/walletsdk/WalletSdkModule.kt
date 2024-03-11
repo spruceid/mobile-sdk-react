@@ -97,7 +97,13 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  override fun createSoftPrivateKeyFromPem(_algo: String, pem: String, promise: Promise) {
+  override fun createSoftPrivateKeyFromSEC1PEM(_algo: String, pem: String, promise: Promise) {
+     // TODO convert pem into pkcs8
+     createSoftPrivateKeyFromPKCS8PEM(_algo, pkcs8Pem, promise)
+  }
+
+  @ReactMethod
+  override fun createSoftPrivateKeyFromPKCS8PEM(_algo: String, pem: String, promise: Promise) {
     var keyBase64 = pem.split("-----BEGIN PRIVATE KEY-----\n").last()
     keyBase64 = keyBase64.split("-----END PRIVATE KEY-----").first()
 

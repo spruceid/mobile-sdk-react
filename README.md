@@ -65,4 +65,5 @@ For more, see [the documentation](https://spruceid.github.io/wallet-sdk-react/).
 
 ## Contributing
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+See the [contributing guide](https://github.com/spruceid/wallet-sdk-react/blob/main/CONTRIBUTING.md)
+to learn how to contribute to the repository and the development workflow.

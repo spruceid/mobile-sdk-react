@@ -57,6 +57,7 @@ class WalletSdk: RCTEventEmitter {
               kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
    kSecUseDataProtectionKeychain: true,
                     kSecValueRef: secKey] as [String: Any]
+      SecItemDelete(query as CFDictionary)
       let status = SecItemAdd(query as CFDictionary, nil)
       //            guard status == errSecSuccess else {
       //                print("Unable to store item: \(status)")

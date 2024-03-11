@@ -5,7 +5,6 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
-import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.ReadableNativeArray
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
@@ -23,61 +22,69 @@ import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
 import java.security.spec.PKCS8EncodedKeySpec
 
-class BleStateCallback(private val context: ReactApplicationContext): BLESessionStateDelegate() {
+class BleStateCallback(private val context: ReactApplicationContext) : BLESessionStateDelegate() {
   override fun update(state: Map<String, Any>) {
     Log.i("WalletSdk", state.toString())
     val eventName = state.keys.first()
     var emitEvent = ""
     val eventValue: WritableMap = WritableNativeMap()
     when (eventName) {
-        "engagingQRCode" -> {
-          emitEvent = "onBleSessionEngagingQrCode"
-          eventValue.putString("qrCodeUri", state[eventName].toString())
-        }
-        "error" -> {
-          emitEvent = "onBleSessionError"
-          eventValue.putString("error", state[eventName].toString())
-        }
-        "selectNamespaces" -> {
-          emitEvent = "onBleSessionSelectNamespace"
-          val items = WritableNativeArray()
-          for (doctype in state[eventName] as ArrayList<ItemsRequest>) {
-            val namespaces = WritableNativeArray()
-            for (namespace in doctype.namespaces as Map<String, Map<String, Boolean>>) {
-              val kvPairs = WritableNativeArray()
-              for (kv in namespace.value) {
-                val item = WritableNativeMap()
-                item.putString("key", kv.key)
-                item.putBoolean("value", kv.value)
-                kvPairs.pushMap(item)
-              }
-              val newNamespace = WritableNativeMap()
-              newNamespace.putString("namespace", namespace.key)
-              newNamespace.putArray("kvPairs", kvPairs)
-              namespaces.pushMap(newNamespace)
+      "engagingQRCode" -> {
+        emitEvent = "onBleSessionEngagingQrCode"
+        eventValue.putString("qrCodeUri", state[eventName].toString())
+      }
+
+      "error" -> {
+        emitEvent = "onBleSessionError"
+        eventValue.putString("error", state[eventName].toString())
+      }
+
+      "connected" -> {
+        emitEvent = "onBleSessionEstablished"
+      }
+
+      "disconnected" -> {
+        emitEvent = "onBleSessionDisconnected"
+      }
+
+      "selectNamespaces" -> {
+        emitEvent = "onBleSessionSelectNamespace"
+        val items = WritableNativeArray()
+        for (doc in state[eventName] as ArrayList<*>) {
+          val docType = doc as ItemsRequest
+          val namespaces = WritableNativeArray()
+          for (namespace in docType.namespaces) {
+            val kvPairs = WritableNativeArray()
+            for (kv in namespace.value) {
+              val item = WritableNativeMap()
+              item.putString("key", kv.key)
+              item.putBoolean("value", kv.value)
+              kvPairs.pushMap(item)
             }
-            val item = WritableNativeMap()
-            item.putString("docType", doctype.docType)
-            item.putArray("namespaces", namespaces)
-            items.pushMap(item)
+            val newNamespace = WritableNativeMap()
+            newNamespace.putString("namespace", namespace.key)
+            newNamespace.putArray("kvPairs", kvPairs)
+            namespaces.pushMap(newNamespace)
           }
-          eventValue.putArray("itemsRequest", items)
+          val item = WritableNativeMap()
+          item.putString("docType", docType.docType)
+          item.putArray("namespaces", namespaces)
+          items.pushMap(item)
         }
-        "progress" -> {
-          emitEvent = "onBleSessionProgress"
-          val map = WritableNativeMap()
-          if((state[eventName] as Map<*, *>)["curr"] == (state[eventName] as Map<*, *>)["max"]) {
-            emitEvent = "onBleSessionSuccess"
-          } else {
-//            Uncomment for better progress management
-//            map.putInt("currentProgress", ((state[eventName] as Map<*, *>)["curr"] as Int))
-//            map.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
-            eventValue.putString("progressMsg", "${(state[eventName] as Map<*, *>)["curr"]}/${(state[eventName] as Map<*, *>)["max"]}")
-          }
-        }
-        "success" -> {
-          emitEvent = "onBleSessionSuccess"
-        }
+        eventValue.putArray("itemsRequest", items)
+      }
+
+      "uploadProgress" -> {
+        emitEvent = "onBleSessionProgress"
+        val map = WritableNativeMap()
+        map.putInt("current", ((state[eventName] as Map<*, *>)["curr"] as Int))
+        map.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
+        eventValue.putMap("progress", map)
+      }
+
+      "success" -> {
+        emitEvent = "onBleSessionSuccess"
+      }
     }
     Log.i("WalletSdkModule.BleStateCallback.update", "event: { $emitEvent: $eventValue }")
     context.emitDeviceEvent(emitEvent, eventValue)
@@ -87,10 +94,10 @@ class BleStateCallback(private val context: ReactApplicationContext): BLESession
 class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   WalletSdkSpec(context) {
 
-    private var bleSessionManager: BLESessionManager? = null
+  private var bleSessionManager: BLESessionManager? = null
 
 
-  private val viewModel =  CredentialsViewModel()
+  private val viewModel = CredentialsViewModel()
 
   override fun getName(): String {
     return NAME
@@ -151,7 +158,7 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
 
     val eventValue: WritableMap = WritableNativeMap()
     eventValue.putString("id", mdoc.inner.id())
-    this.reactApplicationContext.emitDeviceEvent("onCredentialAdded",  eventValue)
+    this.reactApplicationContext.emitDeviceEvent("onCredentialAdded", eventValue)
     promise.resolve(mdoc.inner.id())
   }
 
@@ -161,16 +168,30 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  override fun bleSessionStartPresentMdoc(_bleUuid: String, mdoc: String, privateKey: String, deviceEngagement: String, promise: Promise) {
+  override fun bleSessionStartPresentMdoc(
+    _bleUuid: String,
+    mdoc: String,
+    privateKey: String,
+    deviceEngagement: String,
+    promise: Promise
+  ) {
     val context = this.reactApplicationContext
     Log.i("WalletSdk", "ble session start present mdoc")
-    this.bleSessionManager = BLESessionManager(viewModel.credentials.value.first() as MDoc, getBluetoothManager(this.reactApplicationContext)!!, BleStateCallback(context))
+    this.bleSessionManager = BLESessionManager(
+      viewModel.credentials.value.first() as MDoc,
+      getBluetoothManager(this.reactApplicationContext)!!,
+      BleStateCallback(context)
+    )
     Log.i("WalletSdk", "ble manager created")
     promise.resolve(null)
   }
 
   @ReactMethod
-  override fun bleSessionSubmitNamespaces(_bleUuid: String, namespaces: ReadableArray, promise: Promise) {
+  override fun bleSessionSubmitNamespaces(
+    _bleUuid: String,
+    namespaces: ReadableArray,
+    promise: Promise
+  ) {
     val doctypes = mutableMapOf<String, Map<String, List<String>>>()
     for (doctype in (namespaces as ReadableNativeArray).toArrayList() as ArrayList<Map<String, Any>>) {
       val innerNamespaces = mutableMapOf<String, List<String>>()

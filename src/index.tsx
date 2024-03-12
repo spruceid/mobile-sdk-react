@@ -80,14 +80,62 @@ export interface QrCodeState {
 }
 
 /**
+ * Bluetooth-related errors
+ */
+export enum BluetoothErrorEnum {
+  PoweredOff = 'poweredOff',
+  Unsupported = 'unsupported',
+  Denied = 'denied',
+  Restricted = 'restricted',
+  NotDetermined = 'notDetermined',
+  Unknown = 'unknown',
+  Resetting = 'resetting',
+}
+
+/**
+ * Bluetooth-related error state
+ */
+export interface BluetoothError {
+  kind: 'bluetooth';
+  /**
+   * Error kind
+   */
+  error: BluetoothErrorEnum;
+}
+
+/**
+ * Peripheral-related error state
+ */
+export interface PeripheralError {
+  kind: 'peripheral';
+  /**
+   * Error message
+   */
+  error: string;
+}
+
+/**
+ * Generic error state
+ */
+export interface GenericError {
+  kind: 'generic';
+  /**
+   * Error message
+   */
+  error: string;
+}
+
+export type ErrorStateEnum = BluetoothError | PeripheralError | GenericError;
+
+/**
  * Event emitted on any error during BLE presentment
  */
 export interface ErrorState {
   kind: 'error';
   /**
-   * Debug error message
+   * Fine-grained error state
    */
-  error: string;
+  error: ErrorStateEnum;
 }
 
 /**
@@ -104,16 +152,27 @@ export interface SelectNamespaceState {
 }
 
 /**
- * Event emitted when use is to be updated on progression of internal BLE state
- * such as when successfully connected to a reader or when progress has been
- * made sending bulk data to the reader
+ * Event emitted when an upload is in progress, such as when the holder sends a
+ * response to the reader.
  */
-export interface ProgressState {
-  kind: 'progress';
+export interface UploadProgressState {
+  kind: 'uploadProgress';
   /**
-   * Message encapsulating how state has progressed
+   * Number of chunks sent so far.
    */
-  progressMsg: string;
+  current: number;
+  /**
+   * Total number of chunks to be sent.
+   */
+  total: number;
+}
+
+/**
+ * Event emitted when the device connected to another, such as when the holder
+ * connects to the reader.
+ */
+export interface ConnectedState {
+  kind: 'connected';
 }
 
 /**
@@ -127,8 +186,9 @@ export type BleUpdateState =
   | QrCodeState
   | ErrorState
   | SelectNamespaceState
-  | ProgressState
-  | SuccessState;
+  | UploadProgressState
+  | SuccessState
+  | ConnectedState;
 
 export interface BleStateCallback {
   update(state: BleUpdateState): void;
@@ -174,6 +234,13 @@ export const BleSessionManager = (function () {
     });
   });
 
+  eventEmitter.addListener('onBleSessionEstablished', (event: any) => {
+    console.log('onBleSessionEstablished', event);
+    sendStateUpdate({
+      kind: 'connected',
+    });
+  });
+
   eventEmitter.addListener('onBleSessionError', (event: any) => {
     console.log('onBleSessionError', event);
     sendStateUpdate({
@@ -183,10 +250,10 @@ export const BleSessionManager = (function () {
   });
 
   eventEmitter.addListener('onBleSessionProgress', (event: any) => {
-    console.log('onBleSessionProgress', event);
     sendStateUpdate({
-      kind: 'progress',
-      progressMsg: event.progressMsg,
+      kind: 'uploadProgress',
+      current: event.current,
+      total: event.total,
     });
   });
 

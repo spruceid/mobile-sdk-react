@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import * as Progress from 'react-native-progress';
 import QRCode from 'react-native-qrcode-svg';
 import styles from './Styles';
 import {
@@ -66,9 +67,14 @@ interface SelectNamespaceState {
   itemsRequest: FlatItemsRequest[];
 }
 
-interface ProgressState {
+interface UploadProgressState {
   kind: 'progress';
-  progressMsg: string;
+  current: number;
+  total: number;
+}
+
+interface ConnectedState {
+  kind: 'connected';
 }
 
 interface SuccessState {
@@ -81,7 +87,8 @@ type State =
   | ErrorState
   | SelectNamespaceState
   | SuccessState
-  | ProgressState;
+  | UploadProgressState
+  | ConnectedState;
 
 const requestPermissions = async () => {
   try {
@@ -102,7 +109,6 @@ export default function ShareTab() {
   React.useEffect(() => {
     const callback = {
       update: function (bleState: BleUpdateState) {
-        console.log('got state', bleState);
         switch (bleState.kind) {
           case 'qrCode':
             setState({
@@ -114,7 +120,7 @@ export default function ShareTab() {
           case 'error':
             setState({
               kind: 'error',
-              error: bleState.error,
+              error: JSON.stringify(bleState.error),
             });
             break;
 
@@ -125,16 +131,23 @@ export default function ShareTab() {
             });
             break;
 
-          case 'progress':
+          case 'uploadProgress':
             setState({
               kind: 'progress',
-              progressMsg: bleState.progressMsg,
+              current: bleState.current,
+              total: bleState.total,
             });
             break;
 
           case 'success':
             setState({
               kind: 'success',
+            });
+            break;
+
+          case 'connected':
+            setState({
+              kind: 'connected',
             });
             break;
         }
@@ -146,7 +159,7 @@ export default function ShareTab() {
     return () => {
       BleSessionManager.unRegisterCallback(callback);
     };
-  });
+  }, []);
 
   const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
@@ -276,7 +289,9 @@ export default function ShareTab() {
       );
       break;
     case 'progress':
-      element = <Text>{state.progressMsg}</Text>;
+      element = (
+        <Progress.Bar progress={state.current / state.total} width={300} />
+      );
       break;
     case 'success':
       element = <Text>Success</Text>;

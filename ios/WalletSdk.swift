@@ -1,3 +1,4 @@
+import CoreBluetooth
 import CryptoKit
 import Foundation
 import SpruceIDWalletSdk
@@ -27,7 +28,8 @@ class WalletSdk: RCTEventEmitter {
       "onBleSessionEngagingQrCode",
       "onBleSessionProgress",
       "onBleSessionSelectNamespace",
-      "onBleSessionSuccess"
+      "onBleSessionSuccess",
+      "onBleSessionEstablished"
     ]
   }
 
@@ -158,11 +160,47 @@ extension WalletSdk: BLESessionStateDelegate {
       let str = String(decoding: data, as: UTF8.self)
       WalletSdk.emitter.sendEvent(withName: "onBleSessionEngagingQrCode", body: ["qrCodeUri": str])
     case .error(let error):
-      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": error])
-    case .progress(let message):
-      WalletSdk.emitter.sendEvent(withName: "onBleSessionProgress", body: ["progressMsg": message])
+      switch error {
+      case .bluetooth(let central):
+          switch central.state {
+                  case .poweredOff:
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "poweredOff"]])
+                  case .unsupported:
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unsupported"]])
+                  case .unauthorized:
+                      switch CBManager.authorization {
+                      case .denied:
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "denied"]])
+                      case .restricted:
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "restricted"]])
+                      case .allowedAlways:
+                          break
+                      case .notDetermined:
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "notDetermined"]])
+                      @unknown default:
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
+                      }
+                  case .unknown:
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
+                  case .resetting:
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "resetting"]])
+          case .poweredOn:
+             break
+          @unknown default:
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
+                  }
+      case .peripheral(let error):
+          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "peripheral", "error": error]])
+      case .generic(let error):
+          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "generic", "error": error]])
+      }
+    case .uploadProgress(let value, let total):
+      WalletSdk.emitter.sendEvent(withName: "onBleSessionProgress", body: ["current": value,
+                                                                             "total": total])
     case .success:
       WalletSdk.emitter.sendEvent(withName: "onBleSessionSuccess", body: [])
+    case .connected:
+      WalletSdk.emitter.sendEvent(withName: "onBleSessionEstablished", body: [])
     case .selectNamespaces(let doctypes):
       let items = doctypes.reduce(into: [NSDictionary]()) { result, doctype in
         let namespaces = doctype.namespaces.reduce(into: [NSDictionary]()) {result, namespace in

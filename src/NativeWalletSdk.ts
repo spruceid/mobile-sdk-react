@@ -3,8 +3,6 @@ import { TurboModuleRegistry } from 'react-native';
 import { type PermittedItemDocType } from './index';
 
 export interface Spec extends TurboModule {
-  createSoftPrivateKeyFromSEC1PEM(algo: string, pem: string): Promise<string>;
-
   createSoftPrivateKeyFromPKCS8PEM(algo: string, pem: string): Promise<string>;
 
   createMdocFromCbor(cborBase64: string): Promise<string>;

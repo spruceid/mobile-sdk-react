@@ -120,7 +120,7 @@ export default function ShareTab() {
           case 'error':
             setState({
               kind: 'error',
-              error: bleState.error,
+              error: JSON.stringify(bleState.error),
             });
             break;
 

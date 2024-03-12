@@ -80,14 +80,62 @@ export interface QrCodeState {
 }
 
 /**
+ * Bluetooth-related errors
+ */
+export enum BluetoothErrorEnum {
+  PoweredOff = 'poweredOff',
+  Unsupported = 'unsupported',
+  Denied = 'denied',
+  Restricted = 'restricted',
+  NotDetermined = 'notDetermined',
+  Unknown = 'unknown',
+  Resetting = 'resetting',
+}
+
+/**
+ * Bluetooth-related error state
+ */
+export interface BluetoothError {
+  kind: 'bluetooth';
+  /**
+   * Error kind
+   */
+  error: BluetoothErrorEnum;
+}
+
+/**
+ * Peripheral-related error state
+ */
+export interface PeripheralError {
+  kind: 'peripheral';
+  /**
+   * Error message
+   */
+  error: string;
+}
+
+/**
+ * Generic error state
+ */
+export interface GenericError {
+  kind: 'generic';
+  /**
+   * Error message
+   */
+  error: string;
+}
+
+export type ErrorStateEnum = BluetoothError | PeripheralError | GenericError;
+
+/**
  * Event emitted on any error during BLE presentment
  */
 export interface ErrorState {
   kind: 'error';
   /**
-   * Debug error message
+   * Fine-grained error state
    */
-  error: string;
+  error: ErrorStateEnum;
 }
 
 /**
@@ -204,8 +252,8 @@ export const BleSessionManager = (function () {
   eventEmitter.addListener('onBleSessionProgress', (event: any) => {
     sendStateUpdate({
       kind: 'uploadProgress',
-      current: event.uploadProgress.current,
-      total: event.uploadProgress.total,
+      current: event.current,
+      total: event.total,
     });
   });
 

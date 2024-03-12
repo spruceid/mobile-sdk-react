@@ -36,7 +36,10 @@ class BleStateCallback(private val context: ReactApplicationContext) : BLESessio
 
       "error" -> {
         emitEvent = "onBleSessionError"
-        eventValue.putString("error", state[eventName].toString())
+        val map = WritableNativeMap()
+        map.putString("kind", "generic")
+        map.putString("error", state[eventName].toString())
+        eventValue.putMap("error", map)
       }
 
       "connected" -> {
@@ -76,10 +79,8 @@ class BleStateCallback(private val context: ReactApplicationContext) : BLESessio
 
       "uploadProgress" -> {
         emitEvent = "onBleSessionProgress"
-        val map = WritableNativeMap()
-        map.putInt("current", ((state[eventName] as Map<*, *>)["curr"] as Int))
-        map.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
-        eventValue.putMap("uploadProgress", map)
+        eventValue.putInt("current", ((state[eventName] as Map<*, *>)["curr"] as Int))
+        eventValue.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
       }
 
       "success" -> {

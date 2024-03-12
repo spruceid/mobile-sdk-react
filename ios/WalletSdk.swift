@@ -160,41 +160,40 @@ extension WalletSdk: BLESessionStateDelegate {
       let str = String(decoding: data, as: UTF8.self)
       WalletSdk.emitter.sendEvent(withName: "onBleSessionEngagingQrCode", body: ["qrCodeUri": str])
     case .error(let error):
-      let message = switch error {
+      switch error {
       case .bluetooth(let central):
           switch central.state {
                   case .poweredOff:
-                      "Is Powered Off."
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "poweredOff"]])
                   case .unsupported:
-                      "Is Unsupported."
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unsupported"]])
                   case .unauthorized:
                       switch CBManager.authorization {
                       case .denied:
-                          "Authorization denied"
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "denied"]])
                       case .restricted:
-                          "Authorization restricted"
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "restricted"]])
                       case .allowedAlways:
-                          "Authorized"
+                          break
                       case .notDetermined:
-                          "Authorization not determined"
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "notDetermined"]])
                       @unknown default:
-                          "Unknown authorization error"
+                          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
                       }
                   case .unknown:
-                      "Unknown"
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
                   case .resetting:
-                      "Resetting"
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "resetting"]])
           case .poweredOn:
-             "Impossible"
+             break
           @unknown default:
-                      "Error"
+                      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "bluetooth", "error": "unknown"]])
                   }
       case .peripheral(let error):
-          error
+          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "peripheral", "error": error]])
       case .generic(let error):
-          error
+          WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": ["kind": "generic", "error": error]])
       }
-      WalletSdk.emitter.sendEvent(withName: "onBleSessionError", body: ["error": message])
     case .uploadProgress(let value, let total):
       WalletSdk.emitter.sendEvent(withName: "onBleSessionProgress", body: ["current": value,
                                                                              "total": total])

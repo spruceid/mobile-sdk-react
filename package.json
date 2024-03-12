@@ -73,6 +73,7 @@
     "react": "18.2.0",
     "react-native": "0.73.5",
     "react-native-builder-bob": "^0.23.2",
+    "react-native-progress": "^5.0.1",
     "release-it": "^15.11.0",
     "turbo": "^1.12.4",
     "typedoc": "^0.25.10",
@@ -175,5 +176,8 @@
     "name": "RNWalletSdkSpec",
     "type": "modules",
     "jsSrcsDir": "src"
+  },
+  "dependencies": {
+    "react-native-svg": "^15.1.0"
   }
 }

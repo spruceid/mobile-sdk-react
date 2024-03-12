@@ -79,7 +79,7 @@ class BleStateCallback(private val context: ReactApplicationContext) : BLESessio
         val map = WritableNativeMap()
         map.putInt("current", ((state[eventName] as Map<*, *>)["curr"] as Int))
         map.putInt("total", ((state[eventName] as Map<*, *>)["max"] as Int))
-        eventValue.putMap("progress", map)
+        eventValue.putMap("uploadProgress", map)
       }
 
       "success" -> {

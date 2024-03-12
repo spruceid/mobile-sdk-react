@@ -892,7 +892,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-    - SpruceIDWalletSdk (~> 0.0.5)
+    - SpruceIDWalletSdk (~> 0.0.6)
   - React-nativeconfig (0.73.5)
   - React-NativeModulesApple (0.73.5):
     - glog
@@ -1063,7 +1063,7 @@ PODS:
   - RNSVG (14.1.0):
     - React-Core
   - SocketRocket (0.6.1)
-  - SpruceIDWalletSdk (0.0.5):
+  - SpruceIDWalletSdk (0.0.6):
     - SpruceIDWalletSdkRs (~> 0.0.24)
     - SwiftAlgorithms (~> 1.0.0)
   - SpruceIDWalletSdkRs (0.0.25):
@@ -1274,7 +1274,7 @@ SPEC CHECKSUMS:
   React-logger: 0331362115f0f5b392bd7ed14636d1a3ea612479
   React-Mapbuffer: 7c35cd53a22d0be04d3f26f7881c7fb7dd230216
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
-  react-native-wallet-sdk: cee98ca9b0675ba1b6d4dec4d0d10b6bc494369c
+  react-native-wallet-sdk: c7516c613c1dceece960786ff1ea693e0e0f6626
   React-nativeconfig: 1166714a4f7ea57a0df5c2cb44fbc70f98d580f9
   React-NativeModulesApple: 726664e9829eb5eed8170241000e46ead269a05f
   React-perflogger: 0dd9f1725d55f8264b81efadd373fe1d9cca7dc2
@@ -1297,7 +1297,7 @@ SPEC CHECKSUMS:
   ReactCommon: 2947b0bffd82ea0e58ca7928881152d4c6dae9af
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  SpruceIDWalletSdk: 136ea09ca54f19f464f6c5575e06436742adccde
+  SpruceIDWalletSdk: e315070d8ae3f691c3e8ef5153e1f0504ddc924e
   SpruceIDWalletSdkRs: 55c9d7dd15b29229d1b03dfc921cc84ea1a67dc6
   SpruceIDWalletSdkRsRustFramework: ab40e096e2758d2d18d07cde2fe3333f37e3093e
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53

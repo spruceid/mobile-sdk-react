@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import * as Progress from 'react-native-progress';
 import QRCode from 'react-native-qrcode-svg';
 import styles from './Styles';
 import {
@@ -66,9 +67,14 @@ interface SelectNamespaceState {
   itemsRequest: FlatItemsRequest[];
 }
 
-interface ProgressState {
+interface UploadProgressState {
   kind: 'progress';
-  progressMsg: string;
+  current: number;
+  total: number;
+}
+
+interface ConnectedState {
+  kind: 'connected';
 }
 
 interface SuccessState {
@@ -81,7 +87,8 @@ type State =
   | ErrorState
   | SelectNamespaceState
   | SuccessState
-  | ProgressState;
+  | UploadProgressState
+  | ConnectedState;
 
 const requestPermissions = async () => {
   try {
@@ -125,16 +132,23 @@ export default function ShareTab() {
             });
             break;
 
-          case 'progress':
+          case 'uploadProgress':
             setState({
               kind: 'progress',
-              progressMsg: bleState.progressMsg,
+              current: bleState.current,
+              total: bleState.total,
             });
             break;
 
           case 'success':
             setState({
               kind: 'success',
+            });
+            break;
+
+          case 'connected':
+            setState({
+              kind: 'connected',
             });
             break;
         }
@@ -276,7 +290,7 @@ export default function ShareTab() {
       );
       break;
     case 'progress':
-      element = <Text>{state.progressMsg}</Text>;
+      <Progress.Bar progress={state.current / state.total} width={null} />;
       break;
     case 'success':
       element = <Text>Success</Text>;

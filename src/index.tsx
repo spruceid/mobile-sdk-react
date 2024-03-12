@@ -34,16 +34,18 @@ export function createMdocFromCbor(cborBase64: string): Promise<String> {
 }
 
 /**
- * Register a private key with the wallet-sdk
+ * Register a private key with the wallet-sdk from a PKCS#8 PEM
  * @param algo Accepted values: "p256"
- * @param pem PEM encoded private key
+ * @param key PEM encoded private key
+ * @param cert PEM encoded self-signed cert (required by Android's key store)
  * @returns UUID object ID of the private key created
  */
-export function createSoftPrivateKeyFromPem(
+export function createSoftPrivateKeyFromPKCS8PEM(
   algo: string,
-  pem: string
+  key: string,
+  cert: string
 ): Promise<String> {
-  return WalletSdk.createSoftPrivateKeyFromPem(algo, pem);
+  return WalletSdk.createSoftPrivateKeyFromPKCS8PEM(algo, key, cert);
 }
 
 /**

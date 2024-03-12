@@ -32,15 +32,15 @@ class WalletSdk: RCTEventEmitter {
   }
 
   @objc
-  func createSoftPrivateKeyFromPem(_ algo: String, pem: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+  func createSoftPrivateKeyFromPKCS8PEM(_ algo: String, key: String, cert: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
     if algo != "p256" {
       reject("walletsdk", "Unknown algorithm: \(algo)", nil);
       return;
     }
     if #available(iOS 14.0, *) {
-      var key: P256.Signing.PrivateKey;
+      var privateKey: P256.Signing.PrivateKey;
       do {
-        key = try P256.Signing.PrivateKey(pemRepresentation: pem)
+        privateKey = try P256.Signing.PrivateKey(pemRepresentation: key)
       } catch {
         reject("walletsdk", "Error trying to load private key: \(error)", nil);
         return;
@@ -48,7 +48,7 @@ class WalletSdk: RCTEventEmitter {
       let attributes = [kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
                        kSecAttrKeyClass: kSecAttrKeyClassPrivate] as [String: Any]
       let secKey = SecKeyCreateWithData(
-        key.x963Representation as CFData,
+        privateKey.x963Representation as CFData,
         attributes as CFDictionary,
         nil)!
       var uuid = UUID();

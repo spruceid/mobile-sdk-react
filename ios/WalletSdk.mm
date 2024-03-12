@@ -8,9 +8,10 @@
 @interface RCT_EXTERN_MODULE(WalletSdk, RCTEventEmitter<RCTBridgeModule>)
 #endif
 
-RCT_EXTERN_METHOD(createSoftPrivateKeyFromPem
+RCT_EXTERN_METHOD(createSoftPrivateKeyFromPKCS8PEM
                   :        (NSString *)             algo
-                  pem:     (NSString *)             pem
+                  key:     (NSString *)             key
+                  cert:    (NSString *)             cert
                   resolve: (RCTPromiseResolveBlock) resolve
                   reject:  (RCTPromiseRejectBlock)  reject)
 

@@ -97,8 +97,8 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  override fun createSoftPrivateKeyFromPem(_algo: String, pem: String, promise: Promise) {
-    var keyBase64 = pem.split("-----BEGIN PRIVATE KEY-----\n").last()
+  override fun createSoftPrivateKeyFromPKCS8PEM(_algo: String, key: String, cert: String, promise: Promise) {
+    var keyBase64 = key.split("-----BEGIN PRIVATE KEY-----\n").last()
     keyBase64 = keyBase64.split("-----END PRIVATE KEY-----").first()
 
     val decodedKey = android.util.Base64.decode(
@@ -118,7 +118,7 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
       CertificateFactory.getInstance(
         "X.509"
       ).generateCertificate(
-        pem.byteInputStream()
+        cert.byteInputStream()
       )
     )
 

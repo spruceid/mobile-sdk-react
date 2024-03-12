@@ -8,7 +8,7 @@ import com.facebook.react.bridge.ReadableArray
 abstract class WalletSdkSpec internal constructor(context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
 
-    abstract fun createSoftPrivateKeyFromPem(_algo: String, pem: String, promise: Promise)
+    abstract fun createSoftPrivateKeyFromPKCS8PEM(_algo: String, key: String, cert: String, promise: Promise)
     abstract fun createMdocFromCbor(cborMdoc: String, promise: Promise)
     abstract fun createBleManager(promise: Promise)
     abstract fun bleSessionStartPresentMdoc(_bleUuid: String, mdoc: String, privateKey: String, deviceEngagement: String, promise: Promise)

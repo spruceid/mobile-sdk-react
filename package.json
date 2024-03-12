@@ -1,6 +1,6 @@
 {
   "name": "@spruceid/react-native-wallet-sdk",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Spruce Wallet SDK for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

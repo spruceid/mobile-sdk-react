@@ -202,7 +202,6 @@ export const BleSessionManager = (function () {
   });
 
   eventEmitter.addListener('onBleSessionProgress', (event: any) => {
-    console.log('onBleSessionProgress', event);
     sendStateUpdate({
       kind: 'uploadProgress',
       current: event.uploadProgress.current,

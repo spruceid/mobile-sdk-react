@@ -109,7 +109,6 @@ export default function ShareTab() {
   React.useEffect(() => {
     const callback = {
       update: function (bleState: BleUpdateState) {
-        console.log('got state', bleState);
         switch (bleState.kind) {
           case 'qrCode':
             setState({
@@ -160,7 +159,7 @@ export default function ShareTab() {
     return () => {
       BleSessionManager.unRegisterCallback(callback);
     };
-  });
+  }, []);
 
   const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
@@ -290,7 +289,9 @@ export default function ShareTab() {
       );
       break;
     case 'progress':
-      <Progress.Bar progress={state.current / state.total} width={null} />;
+      element = (
+        <Progress.Bar progress={state.current / state.total} width={300} />
+      );
       break;
     case 'success':
       element = <Text>Success</Text>;

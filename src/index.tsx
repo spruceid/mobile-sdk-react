@@ -57,7 +57,12 @@ export function allCredentials(): Promise<string[]> {
   return WalletSdk.allCredentials();
 }
 
-const eventEmitter = new NativeEventEmitter(WalletSdk);
+let eventEmiterArg = null;
+if (Platform.OS === 'ios') {
+  eventEmiterArg = WalletSdk;
+}
+
+const eventEmitter = new NativeEventEmitter(eventEmiterArg);
 
 eventEmitter.addListener('onCredentialAdded', (event: any) => {
   console.log(event);

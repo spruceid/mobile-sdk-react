@@ -5,6 +5,7 @@ import {
   PermissionsAndroid,
   ScrollView,
   Switch,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -163,7 +164,9 @@ export default function ShareTab() {
 
   const presentButtonOnPress = async () => {
     console.log('share', globalThis.mdocUuid, globalThis.privateKeyUuid);
-    await requestPermissions();
+    if (Platform.OS === 'android') {
+      await requestPermissions();
+    }
     BleSessionManager.startPresentMdoc(
       globalThis.mdocUuid,
       globalThis.privateKeyUuid,

@@ -29,7 +29,7 @@ const WalletSdk = WalletSdkModule
  * @param cborBase64 Base64 of the CBOR of the MDoc to register
  * @returns UUID object ID of the MDoc created
  */
-export function createMdocFromCbor(cborBase64: string): Promise<String> {
+export function createMdocFromCbor(cborBase64: string): Promise<string> {
   return WalletSdk.createMdocFromCbor(cborBase64);
 }
 
@@ -44,7 +44,7 @@ export function createSoftPrivateKeyFromPKCS8PEM(
   algo: string,
   key: string,
   cert: string
-): Promise<String> {
+): Promise<string> {
   return WalletSdk.createSoftPrivateKeyFromPKCS8PEM(algo, key, cert);
 }
 

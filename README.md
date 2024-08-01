@@ -1,11 +1,11 @@
-[![NPM Version](https://img.shields.io/npm/v/%40spruceid%2Freact-native-wallet-sdk)](https://www.npmjs.com/package/@spruceid/react-native-wallet-sdk)
-[![ghpages](https://img.shields.io/badge/docs-passing-green)](https://spruceid.github.io/wallet-sdk-react/)
+[![NPM Version](https://img.shields.io/npm/v/%40spruceid%2Freact-native-mobile-sdk)](https://www.npmjs.com/package/@spruceid/react-native-mobile-sdk)
+[![ghpages](https://img.shields.io/badge/docs-passing-green)](https://spruceid.github.io/mobile-sdk-react/)
 
-# SpruceID Wallet SDK for React Native
+# SpruceID Mobile SDK for React Native
 
 ## Maturity Disclaimer
 
-In its current version, Wallet SDK has not yet undergone a formal security audit
+In its current version, Mobile SDK has not yet undergone a formal security audit
 to desired levels of confidence for suitable use in production systems. This
 implementation is currently suitable for exploratory work and experimentation
 only. We welcome feedback on the usability, architecture, and security of this
@@ -15,7 +15,7 @@ security firm before the v1.0 release.
 ## Installation
 
 ```sh
-npm install @spruceid/react-native-wallet-sdk
+npm install @spruceid/react-native-mobile-sdk
 ```
 
 ### iOS
@@ -54,23 +54,23 @@ await PermissionsAndroid.requestMultiple([
 ## Usage
 
 ```js
-import { createMdocFromCbor } from '@spruceid/react-native-wallet-sdk';
+import { createMdocFromCbor } from '@spruceid/react-native-mobile-sdk';
 
 // ...
 
 const mdoc = await createMdocFromCbor(mdocCborBase64);
 ```
 
-For more, see [the documentation](https://spruceid.github.io/wallet-sdk-react/).
+For more, see [the documentation](https://spruceid.github.io/mobile-sdk-react/).
 
 ## Contributing
 
-See the [contributing guide](https://github.com/spruceid/wallet-sdk-react/blob/main/CONTRIBUTING.md)
+See the [contributing guide](https://github.com/spruceid/mobile-sdk-react/blob/main/CONTRIBUTING.md)
 to learn how to contribute to the repository and the development workflow.
 
 ## Architecture
 
-Our Wallet SDKs use shared code, with most of the logic being written once in
+Our Mobile SDKs use shared code, with most of the logic being written once in
 Rust, and when not possible, native APIs (e.g. Bluetooth, OS Keychain) are
 called in native SDKs.
 
@@ -89,6 +89,6 @@ called in native SDKs.
       │Rust│
       └────┘
 ```
-- [Kotlin SDK](https://github.com/spruceid/wallet-sdk-kt)
-- [Swift SDK](https://github.com/spruceid/wallet-sdk-swift)
-- [Rust layer](https://github.com/spruceid/wallet-sdk-rs)
+- [Kotlin SDK](https://github.com/spruceid/mobile-sdk-kt)
+- [Swift SDK](https://github.com/spruceid/mobile-sdk-swift)
+- [Rust layer](https://github.com/spruceid/mobile-sdk-rs)

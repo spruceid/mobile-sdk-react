@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.walletsdkexample"
+    namespace "com.mobilesdkexample"
     defaultConfig {
-        applicationId "com.walletsdkexample"
+        applicationId "com.mobilesdkexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

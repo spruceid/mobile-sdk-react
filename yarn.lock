@@ -3203,9 +3203,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spruceid/react-native-wallet-sdk@workspace:.":
+"@spruceid/react-native-mobile-sdk@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@spruceid/react-native-wallet-sdk@workspace:."
+  resolution: "@spruceid/react-native-mobile-sdk@workspace:."
   dependencies:
     "@commitlint/config-conventional": ^17.8.1
     "@evilmartians/lefthook": ^1.6.4
@@ -11352,9 +11352,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-wallet-sdk-example@workspace:example":
+"react-native-mobile-sdk-example@workspace:example":
   version: 0.0.0-use.local
-  resolution: "react-native-wallet-sdk-example@workspace:example"
+  resolution: "react-native-mobile-sdk-example@workspace:example"
   dependencies:
     "@babel/core": ^7.24.0
     "@babel/preset-env": ^7.24.0

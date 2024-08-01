@@ -1,11 +1,11 @@
-package com.walletsdk
+package com.mobilesdk
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableArray
 
-abstract class WalletSdkSpec internal constructor(context: ReactApplicationContext) :
+abstract class MobileSdkSpec internal constructor(context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
 
     abstract fun createSoftPrivateKeyFromPKCS8PEM(_algo: String, key: String, cert: String, promise: Promise)

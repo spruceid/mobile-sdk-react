@@ -1,4 +1,4 @@
-package com.walletsdk
+package com.mobilesdk
 
 import android.util.Log
 import com.facebook.react.bridge.Promise
@@ -10,12 +10,12 @@ import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
-import com.spruceid.wallet.sdk.BLESessionManager
-import com.spruceid.wallet.sdk.BLESessionStateDelegate
-import com.spruceid.wallet.sdk.CredentialsViewModel
-import com.spruceid.wallet.sdk.MDoc
-import com.spruceid.wallet.sdk.getBluetoothManager
-import com.spruceid.wallet.sdk.rs.ItemsRequest
+import com.spruceid.mobile.sdk.BLESessionManager
+import com.spruceid.mobile.sdk.BLESessionStateDelegate
+import com.spruceid.mobile.sdk.CredentialsViewModel
+import com.spruceid.mobile.sdk.MDoc
+import com.spruceid.mobile.sdk.getBluetoothManager
+import com.spruceid.mobile.sdk.rs.ItemsRequest
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.Certificate
@@ -24,7 +24,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 
 class BleStateCallback(private val context: ReactApplicationContext) : BLESessionStateDelegate() {
   override fun update(state: Map<String, Any>) {
-    Log.i("WalletSdk", state.toString())
+    Log.i("MobileSdk", state.toString())
     val eventName = state.keys.first()
     var emitEvent = ""
     val eventValue: WritableMap = WritableNativeMap()
@@ -87,13 +87,13 @@ class BleStateCallback(private val context: ReactApplicationContext) : BLESessio
         emitEvent = "onBleSessionSuccess"
       }
     }
-    Log.i("WalletSdkModule.BleStateCallback.update", "event: { $emitEvent: $eventValue }")
+    Log.i("MobileSdkModule.BleStateCallback.update", "event: { $emitEvent: $eventValue }")
     context.emitDeviceEvent(emitEvent, eventValue)
   }
 }
 
-class WalletSdkModule internal constructor(context: ReactApplicationContext) :
-  WalletSdkSpec(context) {
+class MobileSdkModule internal constructor(context: ReactApplicationContext) :
+  MobileSdkSpec(context) {
 
   private var bleSessionManager: BLESessionManager? = null
 
@@ -177,13 +177,13 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
     promise: Promise
   ) {
     val context = this.reactApplicationContext
-    Log.i("WalletSdk", "ble session start present mdoc")
+    Log.i("MobileSdk", "ble session start present mdoc")
     this.bleSessionManager = BLESessionManager(
       viewModel.credentials.value.first() as MDoc,
       getBluetoothManager(this.reactApplicationContext)!!,
       BleStateCallback(context)
     )
-    Log.i("WalletSdk", "ble manager created")
+    Log.i("MobileSdk", "ble manager created")
     promise.resolve(null)
   }
 
@@ -223,6 +223,6 @@ class WalletSdkModule internal constructor(context: ReactApplicationContext) :
   }
 
   companion object {
-    const val NAME = "WalletSdk"
+    const val NAME = "MobileSdk"
   }
 }

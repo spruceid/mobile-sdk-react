@@ -18,7 +18,7 @@ import {
   type ItemsRequestDocType,
   type PermittedItemDocType,
   type PermittedItemNamespace,
-} from '@spruceid/react-native-wallet-sdk';
+} from '@spruceid/react-native-mobile-sdk';
 
 interface FlatItemsRequest {
   docType: string;

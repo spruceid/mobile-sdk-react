@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
-  s.dependency "SpruceIDMobileSdk", "~> 0.0.6"
+  s.dependency "SpruceIDMobileSdk", "~> 0.0.9"
   s.static_framework = true
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.

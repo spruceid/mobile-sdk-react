@@ -155,7 +155,7 @@ class MobileSdkModule internal constructor(context: ReactApplicationContext) :
       android.util.Base64.decode(cborMdoc.toByteArray(), android.util.Base64.DEFAULT),
       "mdoc_key"
     )
-    viewModel.storeCredental(mdoc)
+    viewModel.storeCredential(mdoc)
 
     val eventValue: WritableMap = WritableNativeMap()
     eventValue.putString("id", mdoc.inner.id())

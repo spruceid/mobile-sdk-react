@@ -1,10 +1,10 @@
-package com.walletsdk
+package com.mobilesdk
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.react.ReactActivity
-import com.spruceid.wallet.sdk.CredentialsViewModel
+import com.spruceid.mobile.sdk.CredentialsViewModel
 
 
 /**

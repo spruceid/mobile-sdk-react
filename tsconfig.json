@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@spruceid/react-native-wallet-sdk": ["./src/index"]
+      "@spruceid/react-native-mobile-sdk": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

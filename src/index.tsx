@@ -1,7 +1,7 @@
 import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR =
-  `The package 'react-native-wallet-sdk' doesn't seem to be linked. Make sure: \n\n` +
+  `The package 'react-native-mobile-sdk' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
@@ -9,12 +9,12 @@ const LINKING_ERROR =
 // @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-const WalletSdkModule = isTurboModuleEnabled
-  ? require('./NativeWalletSdk').default
-  : NativeModules.WalletSdk;
+const MobileSdkModule = isTurboModuleEnabled
+  ? require('./NativeMobileSdk').default
+  : NativeModules.MobileSdk;
 
-const WalletSdk = WalletSdkModule
-  ? WalletSdkModule
+const MobileSdk = MobileSdkModule
+  ? MobileSdkModule
   : new Proxy(
       {},
       {
@@ -25,16 +25,16 @@ const WalletSdk = WalletSdkModule
     );
 
 /**
- * Register an MDoc with the wallet-sdk
+ * Register an MDoc with the mobile-sdk
  * @param cborBase64 Base64 of the CBOR of the MDoc to register
  * @returns UUID object ID of the MDoc created
  */
 export function createMdocFromCbor(cborBase64: string): Promise<String> {
-  return WalletSdk.createMdocFromCbor(cborBase64);
+  return MobileSdk.createMdocFromCbor(cborBase64);
 }
 
 /**
- * Register a private key with the wallet-sdk from a PKCS#8 PEM
+ * Register a private key with the mobile-sdk from a PKCS#8 PEM
  * @param algo Accepted values: "p256"
  * @param key PEM encoded private key
  * @param cert PEM encoded self-signed cert (required by Android's key store)
@@ -45,21 +45,21 @@ export function createSoftPrivateKeyFromPKCS8PEM(
   key: string,
   cert: string
 ): Promise<String> {
-  return WalletSdk.createSoftPrivateKeyFromPKCS8PEM(algo, key, cert);
+  return MobileSdk.createSoftPrivateKeyFromPKCS8PEM(algo, key, cert);
 }
 
 /**
  * Retrieve a list of all credentials (such as MDocs) registered with the
- * wallet-sdk
+ * mobile-sdk
  * @returns Array of UUID object IDs of credentials
  */
 export function allCredentials(): Promise<string[]> {
-  return WalletSdk.allCredentials();
+  return MobileSdk.allCredentials();
 }
 
 let eventEmiterArg = null;
 if (Platform.OS === 'ios') {
-  eventEmiterArg = WalletSdk;
+  eventEmiterArg = MobileSdk;
 }
 
 const eventEmitter = new NativeEventEmitter(eventEmiterArg);
@@ -211,11 +211,11 @@ export const BleSessionManager = (function () {
   let toPresent: DeferredPresentArgs | undefined;
   let callbacks: BleStateCallback[] = [];
 
-  WalletSdk.createBleManager().then((uuid: string) => {
+  MobileSdk.createBleManager().then((uuid: string) => {
     internalUuid = uuid;
 
     if (toPresent !== undefined) {
-      WalletSdk.startPresentMdoc(
+      MobileSdk.startPresentMdoc(
         internalUuid,
         toPresent.mdocUuid,
         toPresent.privateKey,
@@ -319,7 +319,7 @@ export const BleSessionManager = (function () {
         };
         return;
       }
-      WalletSdk.bleSessionStartPresentMdoc(
+      MobileSdk.bleSessionStartPresentMdoc(
         internalUuid,
         mdocUuid,
         privateKey,
@@ -333,7 +333,7 @@ export const BleSessionManager = (function () {
      */
     submitNamespaces: function (permitted: PermittedItemDocType[]) {
       console.log('permitted', permitted);
-      WalletSdk.bleSessionSubmitNamespaces(internalUuid, permitted);
+      MobileSdk.bleSessionSubmitNamespaces(internalUuid, permitted);
     },
 
     /**
@@ -341,7 +341,7 @@ export const BleSessionManager = (function () {
      */
     cancel: function () {
       console.log('cancelling');
-      WalletSdk.bleSessionCancel(internalUuid);
+      MobileSdk.bleSessionCancel(internalUuid);
     },
   };
 })();

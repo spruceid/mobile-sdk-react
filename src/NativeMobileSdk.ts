@@ -26,4 +26,4 @@ export interface Spec extends TurboModule {
   allCredentials(): Promise<string[]>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('WalletSdk');
+export default TurboModuleRegistry.getEnforcing<Spec>('MobileSdk');

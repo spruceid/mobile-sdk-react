@@ -1,4 +1,4 @@
-package com.walletsdk
+package com.mobilesdk
 
 import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.ReactApplicationContext
@@ -7,10 +7,10 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.module.model.ReactModuleInfo
 import java.util.HashMap
 
-class WalletSdkPackage : TurboReactPackage() {
+class MobileSdkPackage : TurboReactPackage() {
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return if (name == WalletSdkModule.NAME) {
-      WalletSdkModule(reactContext)
+    return if (name == MobileSdkModule.NAME) {
+      MobileSdkModule(reactContext)
     } else {
       null
     }
@@ -20,9 +20,9 @@ class WalletSdkPackage : TurboReactPackage() {
     return ReactModuleInfoProvider {
       val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()
       val isTurboModule: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
-      moduleInfos[WalletSdkModule.NAME] = ReactModuleInfo(
-        WalletSdkModule.NAME,
-        WalletSdkModule.NAME,
+      moduleInfos[MobileSdkModule.NAME] = ReactModuleInfo(
+        MobileSdkModule.NAME,
+        MobileSdkModule.NAME,
         false,  // canOverrideExistingModule
         false,  // needsEagerInit
         true,  // hasConstants

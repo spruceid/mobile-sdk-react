@@ -1,7 +1,7 @@
 {
-  "name": "@spruceid/react-native-wallet-sdk",
+  "name": "@spruceid/react-native-mobile-sdk",
   "version": "0.1.0",
-  "description": "Spruce Wallet SDK for React Native",
+  "description": "Spruce Mobile SDK for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -26,7 +26,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-wallet-sdk-example",
+    "example": "yarn workspace react-native-mobile-sdk-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -42,14 +42,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spruceid/wallet-sdk-react"
+    "url": "git+https://github.com/spruceid/mobile-sdk-react"
   },
   "author": "Spruce Systems, Inc. <hello@spruceid.com> (https://spruceid.com)",
   "license": "MIT OR Apache-2.0",
   "bugs": {
-    "url": "https://github.com/spruceid/wallet-sdk-react/issues"
+    "url": "https://github.com/spruceid/mobile-sdk-react/issues"
   },
-  "homepage": "https://github.com/spruceid/wallet-sdk-react",
+  "homepage": "https://github.com/spruceid/mobile-sdk-react",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -172,7 +172,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "RNWalletSdkSpec",
+    "name": "RNMobileSdkSpec",
     "type": "modules",
     "jsSrcsDir": "src"
   }

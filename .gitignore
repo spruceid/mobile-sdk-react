@@ -80,3 +80,5 @@ lib/
 
 # typedoc
 docs/
+
+example/android/app/release/

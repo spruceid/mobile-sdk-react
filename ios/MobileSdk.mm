@@ -1,11 +1,11 @@
 #import <React/RCTEventEmitter.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "RNWalletSdkSpec.h"
-@interface RCT_EXTERN_MODULE(WalletSdk, RCTEventEmitter<NativeWalletSdkSpec>)
+#import "RNMobileSdkSpec.h"
+@interface RCT_EXTERN_MODULE(MobileSdk, RCTEventEmitter<NativeMobileSdkSpec>)
 #else
 #import <React/RCTBridgeModule.h>
-@interface RCT_EXTERN_MODULE(WalletSdk, RCTEventEmitter<RCTBridgeModule>)
+@interface RCT_EXTERN_MODULE(MobileSdk, RCTEventEmitter<RCTBridgeModule>)
 #endif
 
 RCT_EXTERN_METHOD(createSoftPrivateKeyFromPKCS8PEM
@@ -52,7 +52,7 @@ RCT_EXTERN_METHOD(allCredentials
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
-    return std::make_shared<facebook::react::NativeWalletSdkSpecJSI>(params);
+    return std::make_shared<facebook::react::NativeMobileSdkSpecJSI>(params);
 }
 #endif
 

@@ -3203,9 +3203,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spruceid/react-native-wallet-sdk@workspace:.":
+"@spruceid/react-native-mobile-sdk@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@spruceid/react-native-wallet-sdk@workspace:."
+  resolution: "@spruceid/react-native-mobile-sdk@workspace:."
   dependencies:
     "@commitlint/config-conventional": ^17.8.1
     "@evilmartians/lefthook": ^1.6.4
@@ -11288,6 +11288,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-mobile-sdk-example@workspace:example":
+  version: 0.0.0-use.local
+  resolution: "react-native-mobile-sdk-example@workspace:example"
+  dependencies:
+    "@babel/core": ^7.24.0
+    "@babel/preset-env": ^7.24.0
+    "@babel/runtime": ^7.24.0
+    "@react-native/babel-preset": 0.73.21
+    "@react-native/metro-config": 0.73.5
+    "@react-native/typescript-config": 0.74.1
+    "@react-navigation/native": ^6.1.14
+    babel-plugin-module-resolver: ^5.0.0
+    pod-install: ^0.1.39
+    react: 18.2.0
+    react-native: 0.73.5
+    react-native-paper: ^5.12.3
+    react-native-progress: ^5.0.1
+    react-native-qrcode-svg: ^6.3.0
+    react-native-safe-area-context: ^4.9.0
+    react-native-svg: ^15.1.0
+  languageName: unknown
+  linkType: soft
+
 "react-native-paper@npm:^5.12.3":
   version: 5.12.3
   resolution: "react-native-paper@npm:5.12.3"
@@ -11351,29 +11374,6 @@ __metadata:
   checksum: a3694b74097e56a810a9142c9480532b63fb9cac0ff8b74c038478172d09acdb4077d93cfa53a8bb31e7ec1a9fc9f6e81a95b028c64af5370b5b3534c99aee0b
   languageName: node
   linkType: hard
-
-"react-native-wallet-sdk-example@workspace:example":
-  version: 0.0.0-use.local
-  resolution: "react-native-wallet-sdk-example@workspace:example"
-  dependencies:
-    "@babel/core": ^7.24.0
-    "@babel/preset-env": ^7.24.0
-    "@babel/runtime": ^7.24.0
-    "@react-native/babel-preset": 0.73.21
-    "@react-native/metro-config": 0.73.5
-    "@react-native/typescript-config": 0.74.1
-    "@react-navigation/native": ^6.1.14
-    babel-plugin-module-resolver: ^5.0.0
-    pod-install: ^0.1.39
-    react: 18.2.0
-    react-native: 0.73.5
-    react-native-paper: ^5.12.3
-    react-native-progress: ^5.0.1
-    react-native-qrcode-svg: ^6.3.0
-    react-native-safe-area-context: ^4.9.0
-    react-native-svg: ^15.1.0
-  languageName: unknown
-  linkType: soft
 
 "react-native@npm:0.73.5":
   version: 0.73.5
